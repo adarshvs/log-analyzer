@@ -1,0 +1,52 @@
+body {
+    background: url(../images/login.svg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+input[type=text].valid:not(.browser-default), input[type=text].valid:not(.browser-default):focus {
+    border-bottom: 1px solid #2196f3;
+    -webkit-box-shadow: 0 1px 0 0 #2196f3;
+    box-shadow: 0 1px 0 0 #2196f3;
+}
+input[type=text]:not(.browser-default):focus:not([readonly])+label {
+	color: #2196f3;
+}
+input[type=text]:focus.validate+label:after {
+    color: #2196f3;
+}
+input[type=text].valid+label {
+    color: #2196f3;
+}
+input[type=text]:not(.browser-default):focus:not([readonly]) {
+    border-bottom: 1px solid #2196f3;
+    -webkit-box-shadow: 0 1px 0 0 #2196f3;
+    box-shadow: 0 1px 0 0 #2196f3;
+}
+input[type=text].invalid:not(.browser-default)+label {
+	color: #F44336;
+}
+input[type=password].valid:not(.browser-default), input[type=text].valid:not(.browser-default):focus {
+    border-bottom: 1px solid #2196f3;
+    -webkit-box-shadow: 0 1px 0 0 #2196f3;
+    box-shadow: 0 1px 0 0 #2196f3;
+}
+input[type=password]:not(.browser-default):focus:not([readonly])+label {
+	color: #2196f3;
+}
+
+input[type=password]:focus.validate+label:after {
+    color: #2196f3;
+}
+input[type=password].valid+label {
+    color: #2196f3;
+}
+input[type=password]:not(.browser-default):focus:not([readonly]) {
+    border-bottom: 1px solid #2196f3;
+    -webkit-box-shadow: 0 1px 0 0 #2196f3;
+    box-shadow: 0 1px 0 0 #2196f3;
+}
+input[type=password].invalid:not(.browser-default)+label {
+	color: #F44336;
+}
