@@ -70,16 +70,19 @@ $(document).ready(function() {
       $('#att_date').css({"border-bottom": "1px solid #2196f3", "-webkit-box-shadow": "0 1px 0 0 #2196f3", "box-shadow": "0 1px 0 0 #2196f3"});
     }
   });
+$('.datepicker').on('mousedown',function(event){
+  event.preventDefault();
+})
    $('.modal').modal();
   $('#message').delay(2000).fadeOut(1500);
   $('#preview').click(function() {
     $('#profile_pic').click();
   });
-  document.getElementById("profile_pic").onchange = function () {
+  /*document.getElementById("profile_pic").onchange = function () {
     var reader = new FileReader();
     reader.onload = function (e) {
       document.getElementById("preview").src = e.target.result;
     };
     reader.readAsDataURL(this.files[0]);
-  };
+  };*/
 });
