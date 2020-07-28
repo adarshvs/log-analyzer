@@ -73,8 +73,6 @@ $total_sys = number_format(logs_total_rows('log_sys', $user['username']));
       $protocol_count = $graph->getCount('log_sys', 'protocol', $user['username'], 10);
 	  $notification_name = $graph->getRows('log_sys', 'notification', $user['username'], 10);
       $notification_count = $graph->getCount('log_sys', 'notification', $user['username'], 10);
-	  $c_name = $graph->getRows('log_access', 'country', $user['username'], 10);
-      $c_count = $graph->getCount('log_access', 'country', $user['username'], 10);
 
       ?>
 
@@ -207,31 +205,58 @@ $total_sys = number_format(logs_total_rows('log_sys', $user['username']));
               <?php endif; ?>
             </div>
           </div>
-        </div> </div>
-		<div class="col s12 m6 l6">
+        </div> 
+		</div>
+		   <div class="col s12 m6 l6">
           <div class="card">
             <div class="card-content ersr">
-              <span class="orange-text card-title">Visitors </span>
-              <div class="divider"></div>
-              <?php if(!empty($browser_name)): ?>
-              <canvas id="geo_chart" height="150px" />
-              <?php else: ?>
-                <div class="center">
-                  <p>
-                    <h1 class="flow-text">NO DATA</h1>
-                  </p>
-                </div>
-              <?php endif; ?>
+              <span class="purple-text card-title">Top Countries 
+     		  </span>
+              <div class="divider" ></div>
+			          <div id="regions_div" style=" height: 350px;"></div>
+             
             </div>
           </div>
-        </div> 
+        </div>
 		    
 		
 		
            
 
     <script type="text/javascript" src="assets/js/chart.min.js?v=2.6.0"></script>
-    <script type="text/javascript">
+    <script type="text/javascript">  
+	google.charts.load('current', {
+        'packages':['geochart'],
+        
+        'mapsApiKey': 'AIzaSyD-9tSrke72PouQMnMX-a7eZSW0jkFMBWY'
+      });
+      google.charts.setOnLoadCallback(drawRegionsMap);
+
+      function drawRegionsMap() {
+        var data = google.visualization.arrayToDataTable([
+         ['Country', 'Visits'],
+		        <?php
+                   $csel = $conn->query("SELECT country, COUNT(*) AS cnt FROM log_access GROUP BY country ORDER BY cnt");
+						while ($c = $csel->fetch())
+							{
+								$country_name=$c[0];
+								$name_count=$c[1];
+								echo "['".$country_name."',",$name_count."],";
+							}
+				?>
+     ]);
+
+        var options = {};
+
+        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+        chart.draw(data, options);
+      }
+      $(window).resize(function(){
+       drawRegionsMap();
+ 
+});
+	
       var ctx = document.getElementById('log_chart').getContext('2d');
       var IpsCount = [<?php
                     $county = "";
@@ -240,7 +265,8 @@ $total_sys = number_format(logs_total_rows('log_sys', $user['username']));
                     }
                     $county = rtrim($county, ",");
                     echo $county;
-                ?>];
+                ?>
+				];
 
       var chart = new Chart(ctx, {
         type: 'doughnut',
@@ -493,41 +519,7 @@ $total_sys = number_format(logs_total_rows('log_sys', $user['username']));
         }
       });
 	  
-	      var ctx = document.getElementById('geo_chart').getContext('2d');
-      var IpsCount = [<?php
-                    $county = "";
-                    foreach($c_count as $count) {
-                      $county .= '"'.$count.'",';
-                    }
-                    $county = rtrim($county, ",");
-                    echo $county;
-                ?>];
-
-      var chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: [
-            <?php
-              $ips = "";
-              foreach($c_name as $value) {
-                $ips .= '"'.$value.'",';
-              }
-              $ips = rtrim($ips, ",");
-              echo $ips;
-            ?>],
-            datasets: [{
-                label: "visitors",
-                data: IpsCount,
-                backgroundColor: ['#4db6ac', '#ffb74d','#e57373','#ba68c8','#7986cb','#64b5f6','#4dd0e1','#81c784','#dce775', '#ffd54f'],
-            }]
-          },
-        options: {
-          responsive: true,
-          legend: {
-            display: false
-          }
-        }
-      });
+	      
 	  
 
     </script>
