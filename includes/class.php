@@ -93,15 +93,21 @@ class Logread {
 
 	function access($filename) {
 		ini_set('memory_limit', '-1');
+		
 		$file = file($filename);
+		$values = array();
 		foreach($file as $line) {
-			$line;
+			//$line;
+
+			//echo strlen($line); continue ;
 
       $list = explode(" ", $line);
       $count = count($list);
 
       // IP
       $public_ip = $this->check_ip($list[0]);
+
+//echo strlen($line); continue ; good
 
       // Date
       $date_time = $list[3];
@@ -146,6 +152,7 @@ class Logread {
 
       // Browser
 	$result = new WhichBrowser\Parser($useragent);
+
 	if(!empty($result->browser->name)) {
 		$browsername = $result->browser->name;
 	}else{
@@ -154,25 +161,14 @@ class Logread {
 			$case_no = $this->case_no;
             $country= getCountryFromIP($public_ip, " NamE ");
 
-			$log_access_sql = "INSERT INTO `log_access`(`case_no`, `public_ip`, `date_time`, `timezone`, `method`, `http_header`, `http_response`, `file_bytes`, `link_ref`, `useragent`, `browser`,`country`) VALUES (:case_no, :public_ip, :date_time, :timezone, :method, :http_header, :http_response, :file_bytes, :link_ref, :useragent, :browser, :country)";
-			$conn = $this->conn();
-			$log_access = $conn->prepare($log_access_sql);
-			$log_access->bindValue(':case_no', $case_no);
-			$log_access->bindValue(':public_ip', $public_ip);
-			$log_access->bindValue(':date_time', $date_time);
-			$log_access->bindValue(':timezone', $timezone);
-			$log_access->bindValue(':method', $method);
-			$log_access->bindValue(':http_header', $http_header);
-			$log_access->bindValue(':http_response', $http_response);
-			$log_access->bindValue(':file_bytes', $file_bytes);
-			$log_access->bindValue(':link_ref', $link_ref);
-			$log_access->bindValue(':useragent', $useragent);
-			$log_access->bindValue(':browser', $browsername);
-			$log_access->bindValue(':country', $country);
-
-			$log_access->execute();
-
+			$new_values_string = "('$case_no', '$public_ip', '$date_time', '$timezone', '$method', '$http_header', '$http_response', '$file_bytes', '$link_ref', '$useragent', '$browsername', '$country' ) " ;
+			$values_parts[] = $new_values_string ;
+			$values[] = $new_values_string ;
 		}
+		$conn = $this->conn();
+		$values_part = implode(',', $values_parts) ;
+
+		$log_access_sql = sprintf("INSERT INTO `log_access`(`case_no`, `public_ip`, `date_time`, `timezone`, `method`, `http_header`, `http_response`, `file_bytes`, `link_ref`, `useragent`, `browser`,`country`) VALUES %s", $values_part) ;
 	}
 	
 
