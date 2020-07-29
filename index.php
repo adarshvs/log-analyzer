@@ -212,8 +212,16 @@ $total_sys = number_format(logs_total_rows('log_sys', $user['username']));
             <div class="card-content ersr">
               <span class="purple-text card-title">Top Countries 
      		  </span>
-              <div class="divider" ></div>
-			          <div id="regions_div" style=" height: 350px;"></div>
+              <div class="divider" ></div> <?php if(!empty($browser_name)): ?>
+              <div id="regions_div" style=" height: 350px;"></div>
+              <?php else: ?>
+                <div class="center">
+                  <p>
+                    <h1 class="flow-text">NO DATA</h1>
+                  </p>
+                </div>
+              <?php endif; ?>
+			        
              
             </div>
           </div>
@@ -246,7 +254,12 @@ $total_sys = number_format(logs_total_rows('log_sys', $user['username']));
 				?>
      ]);
 
-        var options = {};
+        var options = {
+		colorAxis: { colors: ['#eda263', '#7f6084', '#005b94' ,'#ed1c24'],},
+		backgroundColor: '#F8F9FA',
+		datalessRegionColor: '#EEE',
+		defaultColor: '#f5f5f5',
+	};
 
         var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
 

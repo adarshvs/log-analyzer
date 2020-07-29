@@ -144,7 +144,7 @@ if(!empty($message)){
         </div>
       </div>
       <div class="btn no-float hide">
-        <input type="file" id="profile_pic" name="profile_pic">
+        <input type="file" id="profile_pic" name="profile_pic" required="">
       </div>
     </div>
     <div class="row">
