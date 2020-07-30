@@ -1,5 +1,17 @@
 <?php
-
+function fetchAttackTags($type)
+{
+ $conning = connect_pdo();
+ $scanMI = $conning->prepare("SELECT * FROM `attack_det` where tag_category = :tag_category");
+  $scanMI->bindParam(':tag_category',$type );
+  $scanMI->execute();
+$mi=array();
+ while($scans = $scanMI->fetch(PDO::FETCH_ASSOC)) {
+array_push($mi,$scans['tag']);
+ }
+return $mi;
+ print_r ($mi);
+}
 function deleteDir($dir) {
   if (is_dir($dir)) {
     $objects = scandir($dir);

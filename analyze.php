@@ -269,6 +269,13 @@ if(isset($_POST['add_case'])) {
 					} else {
 							echo '<div class="chip red white-text">'.$default_shell.' Default Shell</div>';
 					}
+					$xss = scan_log("log_access", decrypt($_GET['data']), "XSS_DET"); 
+					$xss = count($xss); 
+					if($xss == 0) {
+							echo '<div class="chip green white-text">No XSS</div>';
+					} else {
+							echo '<div class="chip red white-text">'.$xss.' XSS FOUND</div>';
+					}
 					echo $pagination;?>
 				</div>
 		<?php  foreach($data as $log_data) { ?>

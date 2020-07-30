@@ -1,15 +1,15 @@
 <?php 
-
 function scan_log($table_name, $case_no, $type) {
   $conn = connect_pdo();
   $scan = $conn->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM `{$table_name}` WHERE case_no = :case_no");
   $scan->bindParam(':case_no', $case_no);
   $scan->execute();
   $result = array();
-  $manual_injection = array("'");
-  $auto_injection = array('--dbs','union','-u','--current-user','--current-db','--is-dba','--dump');
-  $default_shell = array('wso.php','anon.php','c99','ZyklonShell','PhpSpy','b374k','DxShell','shell.php','r57','Rootshell');
-  $bruteforce = array('Brute force');
+  $manual_injection = fetchAttackTags("mansqli");
+  $auto_injection = fetchAttackTags("autosqli");
+  $default_shell = fetchAttackTags("backdoor");
+  $xss = fetchAttackTags("xss");
+  $bruteforce = fetchAttackTags("Brute Force");
   while($scans = $scan->fetch(PDO::FETCH_ASSOC)) {
     if($table_name == "log_access") {
       if($type == "MANUAL_SQL_INJECTION") {
@@ -32,6 +32,15 @@ function scan_log($table_name, $case_no, $type) {
 	  elseif($type == "DEFAULT_SHELL") {
         if(check_matches($scans['link_ref'], $default_shell)) { 
           $result[] = $scans['link_ref'];
+        }
+      }elseif($type == "XSS_DET") {
+        if(check_matches($scans['link_ref'], $xss)) { 
+          $result[] = $scans['link_ref'];
+        }
+      }
+	  elseif($type == "XSS_DET") {
+        if(check_matches($scans['http_header'], $xss)) { 
+          $result[] = $scans['http_header'];
         }
       }
     }elseif($table_name == "log_sys") {
