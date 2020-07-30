@@ -38,7 +38,7 @@ function scan_log($table_name, $case_no, $type) {
           $result[] = $scans['link_ref'];
         }
       }
-	  elseif($type == "XSS_DET") {
+	  if($type == "XSS_DET") {
         if(check_matches($scans['http_header'], $xss)) { 
           $result[] = $scans['http_header'];
         }
