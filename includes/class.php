@@ -91,80 +91,56 @@ class Logread {
 		}	
 	}
 
-	function access($filename) {
-		ini_set('memory_limit', '-1');
-		
-		$file = file($filename);
-		$values = array();
-		foreach($file as $line) {
-			//$line;
+function access($filename) {
+	ini_set('memory_limit', '-1');
+	
+	$file = file($filename);
+	$values = array();
 
-			//echo strlen($line); continue ;
+	foreach($file as $line) {
+		$list = explode(" ", $line);
+		// IP
+		$public_ip = trim(preg_match('/^(\S+) /', $line, $out) ? $out[0] : 'no match');//$this->check_ip($list[0]);
+		// Date
+		$date_time = preg_match('/\[([^]]+)\]\s/', $line, $out) ? $out[0] : 'no match';
+		// Timezone
+		$timezone = preg_match('/\[([^]]+)\]\s/', $line, $out) ? $out[0] : 'no match';
+		// Method
+		$method = preg_match('/(GET|POST|DELETE|PUT).+?/', $line, $out) ? $out[0] : 'no match';
+		// HTTP Header
+		$http_header = str_replace($method,"",str_replace('"', "", (preg_match('/"(.*?)"/', $line, $out) ? $out[0] : 'no match')));
+		// HTTP Code
+		$http_response = preg_match('/ \d+ /', $line, $out) ? $out[0] : 'no match'; 
+		// File bytes
+		$file_bytes = preg_match('/ \d+ /', $line, $out) ? $out[0] : 'no match';
+		// Reference
+		$link_ref = preg_match('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $line, $out) ? $out[0] : 'no match';
+		// Useragent
+		$useragent = str_replace('"', "", (preg_match('/"([^"]*)"$/', $line, $out) ? $out[0] : 'no match'));
 
-      $list = explode(" ", $line);
-      $count = count($list);
+		$co = count($list) - 1;
+		$userage = array();
+		for ($i = 11; $i <= $co; $i) {
+		  $userage[] = $list[$i++];
+		}
+		$useragent = implode(' ', $userage);
+		$useragent = substr($useragent, 1, -2);
+		$useragent = str_replace('"','', $useragent);
+	  	// Browser
+		$result = new WhichBrowser\Parser($useragent);
 
-      // IP
-      $public_ip = $this->check_ip($list[0]);
-
-//echo strlen($line); continue ; good
-
-      // Date
-      $date_time = $list[3];
-      $date_time = substr($date_time, 1, 11)." ".substr($date_time, 13, 9);
-      $date_time = str_replace('/', '-', $date_time);
-      $date_time = date('Y-m-d H:i:s', strtotime($date_time));
-
-      // Timezone
-      $timezone = $list[4];
-      $timezone = substr($timezone, 0, 5);
-
-      // Method
-      $method = $list[5];
-      $method = substr($method, 1);
-
-      // HTTP Header
-      $http_header = $list[6].' '.$list[7];
-      $http_header = substr($http_header, 0, -1);
-
-      // HTTP Code
-      $http_response = $list[8]; 
-
-      // File bytes
-      $file_bytes = $list[9];
-      if($file_bytes == '-'){
-        $file_bytes = 0;
-      }
-
-      // Reference
-      $link_ref = substr($list[10], 1, -1);
-
-      // Useragent
-      $useragent = $list[11];
-      $co = count($list) - 1;
-      $userage = array();
-      for ($i = 11; $i <= $co; $i) {
-          $userage[] = $list[$i++];
-      }
-      $useragent = implode(' ', $userage);
-      $useragent = substr($useragent, 1, -2);
-	$useragent = str_replace('"','', $useragent);
-
-      // Browser
-
-	$result = new WhichBrowser\Parser($useragent);
-
-	if(!empty($result->browser->name)) {
-		$browsername = $result->browser->name;
-	}else{
-		 $browsername = '-';
-	}
+		if(!empty($result->browser->name)) {
+			$browsername = $result->browser->name;
+		}else{
+			$browsername = '-';
+		}
 		$case_no = $this->case_no;
 	    $country= getCountryFromIP($public_ip, " NamE ");
 
 		$new_values_string = "('$case_no', '$public_ip', '$date_time', '$timezone', '$method', '$http_header', '$http_response', '$file_bytes', '$link_ref', '$useragent', '$browsername', '$country' ) " ;
 		$values_parts[] = $new_values_string ;
 		$values[] = $new_values_string ;
+		
 	}
 
 	$conn = $this->conn();
@@ -173,6 +149,7 @@ class Logread {
 	$log_access_sql = sprintf("INSERT INTO `log_access`(`case_no`, `public_ip`, `date_time`, `timezone`, `method`, `http_header`, `http_response`, `file_bytes`, `link_ref`, `useragent`, `browser`,`country`) VALUES %s", $values_part) ;
 
 	$sql_query_result = $conn->query($log_access_sql);
+
 	}
 	
 
