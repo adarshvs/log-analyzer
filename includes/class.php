@@ -151,6 +151,7 @@ class Logread {
 	$useragent = str_replace('"','', $useragent);
 
       // Browser
+
 	$result = new WhichBrowser\Parser($useragent);
 
 	if(!empty($result->browser->name)) {
@@ -158,17 +159,20 @@ class Logread {
 	}else{
 		 $browsername = '-';
 	}
-			$case_no = $this->case_no;
-            $country= getCountryFromIP($public_ip, " NamE ");
+		$case_no = $this->case_no;
+	    $country= getCountryFromIP($public_ip, " NamE ");
 
-			$new_values_string = "('$case_no', '$public_ip', '$date_time', '$timezone', '$method', '$http_header', '$http_response', '$file_bytes', '$link_ref', '$useragent', '$browsername', '$country' ) " ;
-			$values_parts[] = $new_values_string ;
-			$values[] = $new_values_string ;
-		}
-		$conn = $this->conn();
-		$values_part = implode(',', $values_parts) ;
+		$new_values_string = "('$case_no', '$public_ip', '$date_time', '$timezone', '$method', '$http_header', '$http_response', '$file_bytes', '$link_ref', '$useragent', '$browsername', '$country' ) " ;
+		$values_parts[] = $new_values_string ;
+		$values[] = $new_values_string ;
+	}
 
-		$log_access_sql = sprintf("INSERT INTO `log_access`(`case_no`, `public_ip`, `date_time`, `timezone`, `method`, `http_header`, `http_response`, `file_bytes`, `link_ref`, `useragent`, `browser`,`country`) VALUES %s", $values_part) ;
+	$conn = $this->conn();
+	$values_part = implode(',', $values_parts) ;
+
+	$log_access_sql = sprintf("INSERT INTO `log_access`(`case_no`, `public_ip`, `date_time`, `timezone`, `method`, `http_header`, `http_response`, `file_bytes`, `link_ref`, `useragent`, `browser`,`country`) VALUES %s", $values_part) ;
+
+	$sql_query_result = $conn->query($log_access_sql);
 	}
 	
 
