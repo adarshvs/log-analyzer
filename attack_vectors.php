@@ -37,10 +37,8 @@ include_once('includes/header.php');
       $insert = $conn->prepare($sql);
       $insert->bindValue(':tag', $tag);
       $insert->bindValue(':tag_category', $tag_category);
-	  //echo $_POST['tag'];die();
-	 // print_r ($insert); die();
       if($insert->execute() == TRUE){
-        $message = '<div id="message" class="card col s12 m10 l8 offset-m1 offset-l2 green white-text"><div class="card-content center-align">"'.$tag.'" has been inserted under "'.$tag_category.'"</div></div>';
+        $message = '<div id="message" class="card col s12 m10 l8 offset-m1 offset-l2 green white-text"><div class="card-content center-align">"'.htmlentities($tag, ENT_HTML5  , 'UTF-8').'" has been inserted under "'.$tag_category.'"</div></div>';
           $_POST = array();
       }else{
         $message = '<div id="message" class="card col s12 m10 l8 offset-m1 offset-l2 red white-text"><div class="card-content center-align">Please make a Valid Entry</div></div>';
@@ -139,7 +137,7 @@ include_once('includes/header.php');
     ?>
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
-            <td><?php echo $attack_info['tag']; ?></td>
+            <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
             <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
           </tr><?php } ?>
          
@@ -165,7 +163,7 @@ include_once('includes/header.php');
     ?>
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
-            <td><?php echo $attack_info['tag']; ?></td>
+            <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
             <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
           </tr><?php } ?>
         </tbody>
@@ -189,7 +187,7 @@ include_once('includes/header.php');
     ?>
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
-            <td><?php echo $attack_info['tag']; ?></td>
+            <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
             <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
           </tr><?php } ?>
         </tbody>
@@ -213,7 +211,7 @@ include_once('includes/header.php');
     ?>
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
-            <td><?php echo $attack_info['tag']; ?></td>
+            <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
             <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
           </tr><?php } ?>
         </tbody>
