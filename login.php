@@ -19,8 +19,11 @@ if(isset($_POST['login'])){
     $records->bindParam(':username_email', $_POST['username_email']);
     $records->execute();
     $results = $records->fetch(PDO::FETCH_ASSOC);
-
-    if(count($results) > 0 && password_verify($_POST['password'], $results['password'])){
+	if(empty($results)){
+		$message = '<div id="message" class="card-panel red white-text center-align">Username or password is empty.</div>';
+	}
+   //print_r($results);die();
+    if(password_verify($_POST['password'], $results['password'])){
       $_SESSION['user_id'] = $results['id'];
       $c_name = $results['f_name']. ' ' .$results['l_name'];
       $c_username = $results['username'];
