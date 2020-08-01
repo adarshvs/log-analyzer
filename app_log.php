@@ -108,7 +108,7 @@ include_once('includes/header.php');
 			  </tr>
 			</thead>
             <tbody><?php
-    $user_log_infos = $conn->prepare('SELECT * FROM login_attempts');
+    $user_log_infos = $conn->prepare('SELECT * FROM login_attempts order by fail_time desc ');
     $user_log_infos->execute();
     $user_log_data = $user_log_infos->fetchAll();
     foreach($user_log_data as $user_log_infos) {
