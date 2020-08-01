@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Jul 30, 2020 at 06:56 PM
--- Server version: 5.7.26
--- PHP Version: 7.1.29
+-- Generation Time: Aug 01, 2020 at 08:15 AM
+-- Server version: 10.4.10-MariaDB
+-- PHP Version: 5.6.40
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -82,8 +82,8 @@ CREATE TABLE IF NOT EXISTS `log_access` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_no` varchar(200) NOT NULL,
   `public_ip` varchar(15) NOT NULL,
-  `date_time` datetime NOT NULL,
-  `timezone` varchar(5) NOT NULL,
+  `date_time` varchar(200) NOT NULL,
+  `timezone` varchar(200) NOT NULL,
   `method` varchar(10) NOT NULL,
   `http_header` varchar(500) NOT NULL,
   `http_response` int(3) NOT NULL,

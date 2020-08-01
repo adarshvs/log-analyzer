@@ -148,7 +148,8 @@ function access($filename) {
 
 	$log_access_sql = sprintf("INSERT INTO `log_access`(`case_no`, `public_ip`, `date_time`, `timezone`, `method`, `http_header`, `http_response`, `file_bytes`, `link_ref`, `useragent`, `browser`,`country`) VALUES %s", $values_part) ;
 
-	$sql_query_result = $conn->query($log_access_sql);
+	$sql_query_result = $conn->prepare($log_access_sql);
+
 
 	}
 	

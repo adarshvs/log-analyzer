@@ -131,9 +131,8 @@ include_once('includes/header.php');
         <tbody> <?php
     $attack_infos = $conn->prepare('SELECT * FROM attack_det WHERE tag_category="mansqli"');
     $attack_infos->execute();
-    $attack_det = $attack_infos->fetch(PDO::FETCH_ASSOC);
-    $attack = NULL;
-    while($attack_info = $attack_infos->fetch(PDO::FETCH_ASSOC)) {
+    $attack_det = $attack_infos->fetchAll();
+    foreach($attack_det as $attack_info) {
     ?>
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
@@ -157,9 +156,8 @@ include_once('includes/header.php');
         <tbody><?php
     $attack_infos = $conn->prepare('SELECT * FROM attack_det WHERE tag_category="autosqli"');
     $attack_infos->execute();
-    $attack_det = $attack_infos->fetch(PDO::FETCH_ASSOC);
-    $attack = NULL;
-    while($attack_info = $attack_infos->fetch(PDO::FETCH_ASSOC)) {
+    $attack_det = $attack_infos->fetchAll();
+    foreach($attack_det as $attack_info) {
     ?>
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
@@ -181,9 +179,8 @@ include_once('includes/header.php');
         <tbody><?php
     $attack_infos = $conn->prepare('SELECT * FROM attack_det WHERE tag_category="xss"');
     $attack_infos->execute();
-    $attack_det = $attack_infos->fetch(PDO::FETCH_ASSOC);
-    $attack = NULL;
-    while($attack_info = $attack_infos->fetch(PDO::FETCH_ASSOC)) {
+    $attack_det = $attack_infos->fetchAll();
+    foreach($attack_det as $attack_info) {
     ?>
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
@@ -205,9 +202,8 @@ include_once('includes/header.php');
         <tbody><?php
     $attack_infos = $conn->prepare('SELECT * FROM attack_det WHERE tag_category="backdoor"');
     $attack_infos->execute();
-    $attack_det = $attack_infos->fetch(PDO::FETCH_ASSOC);
-    $attack = NULL;
-    while($attack_info = $attack_infos->fetch(PDO::FETCH_ASSOC)) {
+    $attack_det = $attack_infos->fetchAll();
+    foreach($attack_det as $attack_info) {
     ?>
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
