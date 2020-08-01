@@ -51,7 +51,7 @@ $test_url['link'] = "google.com";
     }
 $user_os        =   getOS(); //get os name
 date_default_timezone_set("Asia/Calcutta");
-$date_time=date("y-m-d H:i:s");
+$date_time=date("Y-m-d H:i:s");
 //echo $date;
 //$pieces = explode(" ", $date);
 //$date= $pieces[0];
