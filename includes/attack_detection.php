@@ -9,7 +9,7 @@ function scan_log($table_name, $case_no, $type) {
   $auto_injection = fetchAttackTags("autosqli");
   $default_shell = fetchAttackTags("backdoor");
   $xss = fetchAttackTags("xss");
-  $bruteforce = fetchAttackTags("Brute Force");
+  $bruteforce = array('Brute Force');
   while($scans = $scan->fetch(PDO::FETCH_ASSOC)) {
     if($table_name == "log_access") {
       if($type == "MANUAL_SQL_INJECTION") {
