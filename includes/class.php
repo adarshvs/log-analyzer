@@ -112,9 +112,9 @@ function access($filename) {
 		// HTTP Code
 		$http_response = preg_match('/ \d+ /', $line, $out) ? $out[0] : 'no match'; 
 		// File bytes
-		$file_bytes = preg_match('/ \d+ /', $line, $out) ? $out[0] : 'no match';
+		$file_bytes = preg_match('/ \d{4,8}/', $line, $out) ? $out[0] : 'no match';
 		// Reference
-		$link_ref = preg_match('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $line, $out) ? $out[0] : 'no match';
+		$link_ref = preg_match('/"http.+?"/', $line, $out) ? $out[0] : 'no match';
 		// Useragent
 		$useragent = str_replace('"', "", (preg_match('/"([^"]*)"$/', $line, $out) ? $out[0] : 'no match'));
 
