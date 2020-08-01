@@ -58,7 +58,7 @@ $date_time=date("y-m-d H:i:s");
 //$time = $pieces[1];
 $referer =$_SERVER["REQUEST_URI"];
 $conn = connect_pdo();
-$sql = "INSERT INTO logs (IP, Browser, Platform, date_time, user_agent, url)
+$sql = "INSERT INTO user_activity_logs (IP, Browser, Platform, date_time, user_agent, url)
   VALUES ('$public_ip', '$user_browser', '$user_os', '$date_time', '$user_agent', '$referer')";
  // print_r($sql);die();
   $sql = $conn->query($sql);

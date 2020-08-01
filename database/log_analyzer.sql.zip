@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 01, 2020 at 08:15 AM
+-- Generation Time: Aug 01, 2020 at 05:01 PM
 -- Server version: 10.4.10-MariaDB
--- PHP Version: 5.6.40
+-- PHP Version: 7.2.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `profile_pic` varchar(200) NOT NULL,
   `register_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
@@ -141,6 +141,24 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `f_name`, `l_name`, `email`, `gender`, `dob`, `role`, `username`, `password`, `profile_pic`, `register_time`) VALUES
 (1, 'Log', 'Admin', 'admin@admin.com', 'male', '2017-01-01', 'admin', 'admin', '$2y$10$ubsIdDdePlkAcX0yIv7uMOzpe0DExStWwuLpnmqehXIFxsPV.U32i', 'wallpaper_1.png', '2017-07-15 16:58:14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_activity_logs`
+--
+
+DROP TABLE IF EXISTS `user_activity_logs`;
+CREATE TABLE IF NOT EXISTS `user_activity_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `IP` varchar(200) NOT NULL,
+  `Browser` varchar(200) NOT NULL,
+  `Platform` varchar(200) NOT NULL,
+  `date_time` datetime(6) NOT NULL,
+  `user_agent` varchar(200) NOT NULL,
+  `url` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
