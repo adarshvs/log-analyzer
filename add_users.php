@@ -13,7 +13,7 @@ if(isset($_SESSION['user_id'])) {
     $user = $results;
   }
 }
-if(!empty($user)):
+if(!empty($user)&&$user['role'] == 'admin'):
 $title = "Add Users";
 include_once('includes/header.php');
   if(isset($_POST['add_user'])){
