@@ -100,11 +100,11 @@ function access($filename) {
 	foreach($file as $line) {
 		$list = explode(" ", $line);
 		// IP
-		$public_ip = trim(preg_match('/^(\S+) /', $line, $out) ? $out[0] : 'no match');//$this->check_ip($list[0]);
+		$public_ip = preg_match('/^(\S+) /', $line, $out) ? $out[1] : 'no match';//$this->check_ip($list[0]);
 		// Date
-		$date_time = preg_match('/\[([^]]+)\]\s/', $line, $out) ? $out[0] : 'no match';
+		$date_time = preg_match('/\[(.+)\]/', $line, $out) ? $out[1] : 'no match';
 		// Timezone
-		$timezone = preg_match('/\[([^]]+)\]\s/', $line, $out) ? $out[0] : 'no match';
+		$timezone = preg_match('/\[(.+)\]/', $line, $out) ? $out[1] : 'no match';
 		// Method
 		$method = preg_match('/(GET|POST|DELETE|PUT).+?/', $line, $out) ? $out[0] : 'no match';
 		// HTTP Header
@@ -114,9 +114,9 @@ function access($filename) {
 		// File bytes
 		$file_bytes = preg_match('/ \d{4,8}/', $line, $out) ? $out[0] : 'no match';
 		// Reference
-		$link_ref = preg_match('/"http.+?"/', $line, $out) ? $out[0] : 'no match';
+		$link_ref = preg_match('/"(http.+?)"/', $line, $out) ? $out[1] : 'no match';
 		// Useragent
-		$useragent = str_replace('"', "", (preg_match('/"([^"]*)"$/', $line, $out) ? $out[0] : 'no match'));
+		$useragent = preg_match('/"(\w{3,}\/\d.{5,}?)"/', $line, $out) ? $out[1] : 'no match';
 
 		$co = count($list) - 1;
 		$userage = array();
