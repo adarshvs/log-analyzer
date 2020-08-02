@@ -16,6 +16,19 @@ if(isset($_SESSION['user_id'])) {
 if(!empty($user)&&$user['role'] == 'admin'):
 $title = "Update Database";
 include_once('includes/header.php');
+if(isset($_GET['delete'])){
+  $delete_tag = $_GET['delete'];
+  $delete = $conn->prepare("DELETE FROM attack_det WHERE tag=:tag");
+  $delete->bindValue(':tag', $delete_tag);
+  $delete->execute();
+  
+  $rem_id_col = "ALTER TABLE attack_det DROP COLUMN id";
+  $add_new_id_col = "ALTER TABLE attack_det ADD id int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT FIRST";
+  $conn->exec($rem_id_col);
+  $conn->exec($add_new_id_col);
+  echo '<script type="text/javascript">window.location.replace("attack_vectors.php");</script>';
+  exit();
+ }
   if(isset($_POST['add_attack'])){
   
     $tag = $_POST['tag'];
@@ -137,9 +150,18 @@ include_once('includes/header.php');
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
             <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
-            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
-          </tr><?php } ?>
-         
+
+            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
+          </tr>
+         <div id="modal<?php echo $attack_info['id']; ?>" class="modal">
+           <div class="modal-content">
+             <p>Do you really want to remove <b><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></b> permanently from this <?php echo htmlentities($attack_info['tag_category'], ENT_HTML5  , 'UTF-8'); ?></p>
+           </div>
+          <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
+            <a href="?delete=<?php echo $attack_info['tag']; ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
+          </div>
+         </div><?php } ?>
         </tbody>
       </table>	
 	</div>
@@ -162,10 +184,20 @@ include_once('includes/header.php');
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
             <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
-            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
-          </tr><?php } ?>
+            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
+          </tr>
+         <div id="modal<?php echo $attack_info['id']; ?>" class="modal">
+           <div class="modal-content">
+             <p>Do you really want to remove <b><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></b> permanently from this <?php echo htmlentities($attack_info['tag_category'], ENT_HTML5  , 'UTF-8'); ?></p>
+           </div>
+          <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
+            <a href="?delete=<?php echo $attack_info['tag']; ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
+          </div>
+         </div><?php } ?>
         </tbody>
-      </table>		</div>
+      </table>  	
+    </div>
     <div id="test3" class="col s12">
 	  <table class="responsive-table">
            <thead>
@@ -185,10 +217,20 @@ include_once('includes/header.php');
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
             <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
-            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
-          </tr><?php } ?>
+            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
+          </tr>
+         <div id="modal<?php echo $attack_info['id']; ?>" class="modal">
+           <div class="modal-content">
+             <p>Do you really want to remove <b><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></b> permanently from this <?php echo htmlentities($attack_info['tag_category'], ENT_HTML5  , 'UTF-8'); ?></p>
+           </div>
+          <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
+            <a href="?delete=<?php echo $attack_info['tag']; ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
+          </div>
+         </div><?php } ?>
         </tbody>
-      </table>		</div>
+      </table>  
+      </div>
     <div id="test4" class="col s12">
 	  <table class="responsive-table">
            <thead>
@@ -208,10 +250,20 @@ include_once('includes/header.php');
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
             <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
-            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
-          </tr><?php } ?>
+            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
+          </tr>
+         <div id="modal<?php echo $attack_info['id']; ?>" class="modal">
+           <div class="modal-content">
+             <p>Do you really want to remove <b><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></b> permanently from this <?php echo htmlentities($attack_info['tag_category'], ENT_HTML5  , 'UTF-8'); ?></p>
+           </div>
+          <div class="modal-footer">
+            <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
+            <a href="?delete=<?php echo $attack_info['tag']; ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
+          </div>
+         </div><?php } ?>
         </tbody>
-      </table>		</div>
+      </table>  	
+    </div>
   </div>
         
   </div>
