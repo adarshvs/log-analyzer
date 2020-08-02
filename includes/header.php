@@ -51,7 +51,7 @@
     <li><a class="waves-effect <?php if(strpos($_SERVER['REQUEST_URI'], "/users.php")){ echo "active"; } ?>" href="users.php"><i class="material-icons">&#xE7EF;</i><span class="badge"><?php echo $count->rowCount(); ?></span>Users</a></li>
     <li><a class="waves-effect <?php if(strpos($_SERVER['REQUEST_URI'], "/add_users.php")){ echo "active"; } ?>" href="add_users.php"><i class="material-icons">&#xE7FE;</i>Add Users</a></li>
 	<li><a class="waves-effect <?php if(strpos($_SERVER['REQUEST_URI'], "/attack_vectors.php")){ echo "active"; } ?>" href="attack_vectors.php"><i class="material-icons">&#xe868</i>Attack Vectors</a></li>
-	<li><a class="waves-effect <?php if(strpos($_SERVER['REQUEST_URI'], "/app_log.php")){ echo "active"; } ?>" href="app_log.php"><i class="material-icons">&#xe915;</i>App Traffic</a></li>
+	<li><a class="waves-effect <?php if(strpos($_SERVER['REQUEST_URI'], "/app_log.php")){ echo "active"; } ?>" href="app_log.php"><i class="material-icons">&#xe915;</i>App Insight</a></li>
     <?php }else{ ?>
     <li><a class="waves-effect" href="case_history.php"><i class="material-icons">&#xE8EF;</i>Case History</a></li>
     <?php } ?>
