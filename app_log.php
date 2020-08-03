@@ -16,48 +16,23 @@ if(isset($_SESSION['user_id'])) {
 if(!empty($user)&&$user['role'] == 'admin'):
 $title = "Insight";
 include_once('includes/header.php');
-  if(isset($_POST['add_attack'])){
-  
-    $tag = $_POST['tag'];
-    $tag_category = $_POST['tag_category'];
-    
-         
-    $conn = connect_pdo();
-    $sql_check_tag = "SELECT `tag` FROM `attack_det` WHERE `tag` = :tag";
-    $check_tag = $conn->prepare($sql_check_tag);
-    $check_tag->bindValue(':tag', $tag);
-    $check_tag->execute();
-
-
-    if($check_tag->rowCount() > 0){
-      $message = '<div id="message" class="card col s12 m10 l8 offset-m1 offset-l2 red white-text"><div class="card-content center-align">Sorry Attack Tag already exist!</div></div>';
-    }else{
-      
-      $sql = "INSERT INTO `attack_det`(`tag`, `tag_category`) VALUES (:tag, :tag_category)";
-      $insert = $conn->prepare($sql);
-      $insert->bindValue(':tag', $tag);
-      $insert->bindValue(':tag_category', $tag_category);
-      if($insert->execute() == TRUE){
-        $message = '<div id="message" class="card col s12 m10 l8 offset-m1 offset-l2 green white-text"><div class="card-content center-align">"'.htmlentities($tag, ENT_HTML5  , 'UTF-8').'" has been inserted under "'.$tag_category.'"</div></div>';
-          $_POST = array();
-      }else{
-        $message = '<div id="message" class="card col s12 m10 l8 offset-m1 offset-l2 red white-text"><div class="card-content center-align">Please make a Valid Entry</div></div>';
-      }
-    
-    }
-  
-
-}
-?>
-
+      if(!isset($_GET['page'])) {
+        header('Location: ?page=1');
+        exit();}
+        $obj = new PageUserActivityLogs('user_activity_logs',$_GET['page'],10);     
+      $obj->pageData();
+      $data_log = $obj->pageData();
+      $pagination = $obj->pagination();
+           
+ ?>
 <div class="row">
-    <div class="col s12">
+    <div class="col s12"><?php //echo $pagination; ?>
       <ul class="tabs tabs-fixed-width z-depth-1">
         <li class="tab col s3"><a href="#user_log" class="active">USER LOGS </a></li>
         <li class="tab col s3"><a href="#login_attempt" class="">Failed Login Attempts</a></li>
       <li class="indicator" style="right: 468px; left: 0px;"></li></ul>
     </div>
-    <div id="user_log" class="col s12 active" style="">
+    <div id="user_log" class="col s12 active" style=""> <?php //echo $pagination; ?>
       <div class="card">
         <div class="card-content">
           <table class="responsive-table bordered">
@@ -73,10 +48,8 @@ include_once('includes/header.php');
 			</thead>
             <tbody>
 			<?php
-    $user_log_infos = $conn->prepare('SELECT * FROM user_activity_logs order by date_time desc ');
-    $user_log_infos->execute();
-    $user_log_data = $user_log_infos->fetchAll();
-    foreach($user_log_data as $user_log_infos) {
+   
+    foreach($data_log as $user_log_infos) {
 		$pieces = explode(" ", $user_log_infos['date_time']);
 		$date= $pieces[0];
 		$time = $pieces[1];
@@ -93,7 +66,7 @@ include_once('includes/header.php');
 	       </tbody>
 		  </table>
         </div>
-      </div>
+      </div><?php echo $pagination; ?>
     </div>
     <div id="login_attempt" class="col s12" style="display: none;">
       <div class="card">

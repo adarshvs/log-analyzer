@@ -3,6 +3,7 @@ require_once('session_timeout.php');
 require_once('define.php');
 require_once('functions.php');
 require_once('class.php');
+require_once('appInsight_pagination_class.php');
 require_once('includes/UAParser/UAParser.php');
 require_once('includes/geoiploc.php');
 require_once('includes/attack_detection.php');
