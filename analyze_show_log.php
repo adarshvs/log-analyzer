@@ -61,7 +61,7 @@
   <div class="row">
 
     <div class="col s12 m12">
-      <a href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=<?php echo $_GET['page']; ?>&print" class="right btn-floating waves-effect waves-light white z-depth-1"><i class="material-icons grey-text text-darken-3">&#xE8AD;</i></a>
+      <a href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=&print" class="right btn-floating waves-effect waves-light white z-depth-1"><i class="material-icons grey-text text-darken-3">&#xE8AD;</i></a>
     <h4 class="light grey-text text-darken-2">Case <?php echo decrypt($_GET['data']); ?></h4>
     <?php 
       if (!isset($_GET['public_ip'])){ 
@@ -129,7 +129,7 @@ if(isset($_GET['attack_date']) && !empty($_GET['attack_date'])){
           <p>
             <i class="mdi mdi-earth"></i> <b>Public IP : </b>
             <a target="_blank" href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&public_ip=<?php echo $log_data['public_ip']; ?>&href=#logTable"><?php echo $log_data['public_ip']; ?></a>
-            <a class="btn-floating btn-flat white waves-effect waves-light" href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=<?php echo $_GET['page']; ?>&info=<?php echo encrypt($log_data['public_ip']); ?>"><i class="material-icons grey-text text-darken-3">&#xE8B6;</i></a>
+            <a class="btn-floating btn-flat white waves-effect waves-light" href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=&info=<?php echo encrypt($log_data['public_ip']); ?>"><i class="material-icons grey-text text-darken-3">&#xE8B6;</i></a>
           </p>
           <p>
             <i class="mdi mdi-clock"></i> <b>Time : </b> <a href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&date_time=<?php echo $log_data['date_time']; ?>"><?php echo date("d M Y h:i A", strtotime($log_data['date_time'])) ?></a>

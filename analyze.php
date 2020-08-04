@@ -32,7 +32,7 @@ if(isset($_GET['print'])) {
 		header('Content-Type: text/csv; charset=utf-8');
 		header('Content-Disposition: attachment; filename=access.csv');
 		$output = fopen('php://output', 'w');
-		fputcsv($output, array('id', 'case_no', 'public_ip', 'date_time', 'timezone', 'method', 'http_header', 'http_response', 'file_bytes', 'link_ref', 'useragent', 'browser', 'country'));
+		fputcsv($output, array('id', 'case_no', 'public_ip', 'date_time', 'timezone', 'method', 'http_header', 'http_response', 'file_bytes', 'link_ref', 'useragent', 'browser', 'country','raw_data'));
 		if(count($access) > 0) {
 			foreach ($access as $row) {
 				fputcsv($output, $row);
