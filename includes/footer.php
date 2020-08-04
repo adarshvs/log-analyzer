@@ -5,7 +5,6 @@
 			<div class="container">&copy;<?php echo date("Y"); ?> - Log Analyzer</div>
 		</div>
 	</footer>
-    <script type="text/javascript" src="assets/js/jquery.min.js?v=3.2.1"></script>
     <script type="text/javascript" src="assets/js/materialize.min.js?v=0.100.2"></script>
     <script type="text/javascript" src="assets/js/main.js?v=0.4"></script>
     <?php 
@@ -18,6 +17,10 @@
 	</script>
     <?php 
       }
-       ?>
+     ?>
+
+    <?php  if(isset($_GET['show'])) { ?>
+    <script src='assets/plugins/full-calendar/lib/main.js'></script>
+    <?php } ?>
   </body>
 </html>

@@ -10,15 +10,28 @@
     <link href="assets/css/materialdesignicons.css" rel="stylesheet">
     <link href="assets/css/styles.css?v=0.1.0" rel="stylesheet">
     <link rel="shortcut icon" href="assets/images/logo.png">
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src='https://www.google.com/jsapi'></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <!--[if IE]>
-      <script type="text/javascript" src="assets/js/html5shiv.min.js?v=3.7.3"></script>
-      <script type="text/javascript" src="assets/js/respond.min.js?v=1.4.2"></script>
-    <![endif]-->
+    <!-- Full calendar -->
+    <link href='assets/plugins/full-calendar/lib/main.css' rel='stylesheet' />
+    <!-- Date Range Picker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+  
   </head>
   <style type="text/css">
+    .fc-col-header-cell-cushion {
+      color:black !important;
+    }
+    .fc-daygrid-day-number{
+      color:black !important;
+    }
+    .fc-listMonth-button {
+      background-color: red !important;
+      border-color: red !important;
+    }
   </style>
   <body class="grey lighten-4">
   <header>

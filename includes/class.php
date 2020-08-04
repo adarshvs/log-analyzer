@@ -1,5 +1,4 @@
 <?php 
-
 class Logread {
 
 	private $case_no;
@@ -241,7 +240,6 @@ class Page {
 			$limit = $this->limit;
 			$tablename = $this->table;
 			$page = $this->page_data;
-			$this->url_data;
 			$url_data_decrypt = decrypt($this->url_data);
 			$page = stripslashes($page);
 			$page = htmlspecialchars($page);
@@ -351,6 +349,248 @@ class Page {
 		$pagination = $this->data;
 		return $pagination;
 	}
-
 }
+
+/**
+ * For Individual Access log and Sys log
+ */
+class Model 
+{
+	
+	public function getAllAttacksbyDateForAccessLog($date,$case_no){
+		//Check if the date format is valid
+		$is_valid = $this->isValidateDate($date,'Y-m-d');
+		if(!$is_valid){
+			return false;
+		}
+		
+		$start_date_time = date('Y-m-d H:i:s', strtotime($date.' 00:00:00'));
+		$end_date_time = date('Y-m-d H:i:s', strtotime($date.' 24:00:00'));
+
+		$conn = connect_pdo();
+		$log_datas = $conn->prepare("SELECT * FROM `log_access` WHERE `case_no` = :case_no AND `date_time` BETWEEN :start_date_time AND :end_date_time ORDER BY `date_time`");
+		
+		$log_datas->bindParam(':case_no', $case_no);
+		$log_datas->bindParam(':start_date_time', $start_date_time);
+		$log_datas->bindParam(':end_date_time', $end_date_time);
+		$log_datas->execute();
+		//Check if any row was attacked
+		$result = array();
+		$manual_injection = fetchAttackTags("mansqli");
+		$auto_injection = fetchAttackTags("autosqli");
+		$default_shell = fetchAttackTags("backdoor");
+		$xss = fetchAttackTags("xss");
+		while($scans = $log_datas->fetch(PDO::FETCH_ASSOC)) {
+			
+		    if(check_matches($scans['link_ref'], $manual_injection)) { 
+	    	 	$scans['attack_type'] = 'MANUAL_SQL_INJECTION';
+	    	 	$scans['attack_description'] = 'Manual SQL injection on referal url';
+		      	$result[] = $scans;
+		    }
+		
+		    if(check_matches($scans['link_ref'], $auto_injection)) { 
+		    	$scans['attack_type'] = 'AUTO_SQL_INJECTION';
+	    	 	$scans['attack_description'] = 'Auto SQL injection on referal url';
+		      	$result[] = $scans;
+		    }
+		
+		    if(check_matches($scans['http_header'], $manual_injection)) { 
+		    	$scans['attack_type'] = 'MANUAL_SQL_INJECTION';
+	    	 	$scans['attack_description'] = 'Manual SQL injection on header';
+		      	$result[] = $scans;
+		    }
+		
+		    if(check_matches($scans['http_header'], $auto_injection)) { 
+		    	$scans['attack_type'] = 'AUTO_SQL_INJECTION';
+	    	 	$scans['attack_description'] = 'Auto SQL injection on header';
+		      	$result[] = $scans;
+		    }
+		
+		    if(check_matches($scans['link_ref'], $default_shell)) { 
+		    	$scans['attack_type'] = 'DEFAULT_SHELL';
+	    	 	$scans['attack_description'] = 'Default shell on referal url';
+		      	$result[] = $scans;
+		    }
+		
+		    if(check_matches($scans['link_ref'], $xss)) {
+		    	$scans['attack_type'] = 'XSS_DET';
+	    	 	$scans['attack_description'] = 'XSS attack on referal url'; 
+		      	$result[] = $scans;
+		    }
+		
+		    if(check_matches($scans['http_header'], $xss)) { 
+		    	$scans['attack_type'] = 'XSS_DET';
+	    	 	$scans['attack_description'] = 'XSS attack on header';
+		      	$result[] = $scans;
+		    }
+			
+		}
+
+		return $result;
+
+	}
+
+	public function getAllAttacksForCalendar($case_no){
+
+		$conn = connect_pdo();
+		$log_datas = $conn->prepare("SELECT * FROM `log_access` WHERE `case_no` = :case_no ORDER BY `date_time`");
+		
+		$log_datas->bindParam(':case_no', $case_no);
+		$log_datas->execute();
+		//Check if any row was attacked
+		$result = array();
+		$manual_injection = fetchAttackTags("mansqli");
+		$auto_injection = fetchAttackTags("autosqli");
+		$default_shell = fetchAttackTags("backdoor");
+		$xss = fetchAttackTags("xss");
+		while($scans = $log_datas->fetch(PDO::FETCH_ASSOC)) {
+			
+		    if(check_matches($scans['link_ref'], $manual_injection)) { 
+
+	    	 	$attack_date_time = date('Y-m-d H:i:s', strtotime($scans['date_time']));
+	    	 	$attack_date = date('Y-m-d', strtotime($scans['date_time']));
+		      	$result[] = [
+
+		      		'id'	=> $scans['id'],
+		      		'title'	=> 'Manual SQL injection on referal url',
+		      		'start' => $attack_date_time,
+		      		'color' => 'red',
+		      		'url' => getBaseUrl().'analyze.php?show=access_log&data='.encrypt($case_no).'&attack_date='.$attack_date.'&href=#attackDate',
+		      		'description' => 'Manual SQL injection on referal url'
+		      	];
+		    }
+		
+		    if(check_matches($scans['link_ref'], $auto_injection)) { 
+		    
+		      	$attack_date_time = date('Y-m-d H:i:s', strtotime($scans['date_time']));
+	    	 	$attack_date = date('Y-m-d', strtotime($scans['date_time']));
+		      	$result[] = [
+		      		
+		      		'id'	=> $scans['id'],
+		      		'title'	=> 'Auto SQL injection on referal url',
+		      		'start' => $attack_date_time,
+		      		'color' => 'red',
+		      		'url' => getBaseUrl().'analyze.php?show=access_log&data='.encrypt($case_no).'&attack_date='.$attack_date.'&href=#attackDate',
+		      		'description' => 'Auto SQL injection on referal url'
+		      	];
+		    }
+		
+		    if(check_matches($scans['http_header'], $manual_injection)) { 
+		    	
+		      	$attack_date_time = date('Y-m-d H:i:s', strtotime($scans['date_time']));
+	    	 	$attack_date = date('Y-m-d', strtotime($scans['date_time']));
+		      	$result[] = [
+		      		
+		      		'id'	=> $scans['id'],
+		      		'title'	=> 'Manual SQL injection on header',
+		      		'start' => $attack_date_time,
+		      		'color' => 'red',
+		      		'url' => getBaseUrl().'analyze.php?show=access_log&data='.encrypt($case_no).'&attack_date='.$attack_date.'&href=#attackDate',
+		      		'description' => 'Manual SQL injection on header'
+		      	];
+		    }
+		
+		    if(check_matches($scans['http_header'], $auto_injection)) { 
+		    	
+		      	$attack_date_time = date('Y-m-d H:i:s', strtotime($scans['date_time']));
+	    	 	$attack_date = date('Y-m-d', strtotime($scans['date_time']));
+		      	$result[] = [
+		      		
+		      		'id'	=> $scans['id'],
+		      		'title'	=> 'Auto SQL injection on header',
+		      		'start' => $attack_date_time,
+		      		'color' => 'red',
+		      		'url' => getBaseUrl().'analyze.php?show=access_log&data='.encrypt($case_no).'&attack_date='.$attack_date.'&href=#attackDate',
+		      		'description' => 'Auto SQL injection on header'
+		      	];
+		    }
+		
+		    if(check_matches($scans['link_ref'], $default_shell)) { 
+		   
+		      	$attack_date_time = date('Y-m-d H:i:s', strtotime($scans['date_time']));
+	    	 	$attack_date = date('Y-m-d', strtotime($scans['date_time']));
+		      	$result[] = [
+		      		
+		      		'id'	=> $scans['id'],
+		      		'title'	=> 'Default shell on referal url',
+		      		'start' => $attack_date_time,
+		      		'color' => 'red',
+		      		'url' => getBaseUrl().'analyze.php?show=access_log&data='.encrypt($case_no).'&attack_date='.$attack_date.'&href=#attackDate',
+		      		'description' => 'Default shell on referal url'
+		      	];
+		    }
+		
+		    if(check_matches($scans['link_ref'], $xss)) {
+		    	
+		      	$attack_date_time = date('Y-m-d H:i:s', strtotime($scans['date_time']));
+	    	 	$attack_date = date('Y-m-d', strtotime($scans['date_time']));
+		      	$result[] = [
+		      		
+		      		'id'	=> $scans['id'],
+		      		'title'	=> 'XSS attack on referal url',
+		      		'start' => $attack_date_time,
+		      		'color' => 'red',
+		      		'url' => getBaseUrl().'analyze.php?show=access_log&data='.encrypt($case_no).'&attack_date='.$attack_date.'&href=#attackDate',
+		      		'description' => 'XSS attack on referal url'
+		      	];
+		    }
+		
+		    if(check_matches($scans['http_header'], $xss)) { 
+		    	
+		      	$attack_date_time = date('Y-m-d H:i:s', strtotime($scans['date_time']));
+	    	 	$attack_date = date('Y-m-d', strtotime($scans['date_time']));
+		      	$result[] = [
+		      		
+		      		'id'	=> $scans['id'],
+		      		'title'	=> 'XSS attack on header',
+		      		'start' => $attack_date_time,
+		      		'color' => 'red',
+		      		'url' => getBaseUrl().'analyze.php?show=access_log&data='.encrypt($case_no).'&attack_date='.$attack_date.'&href=#attackDate',
+		      		'description' => 'XSS attack on header'
+		      	];
+		    }
+			
+		}
+
+		return $result;
+
+	}
+
+	public function getAllAccessLogByIp($public_ip, $case_no,$page,$limit){
+		$conn = connect_pdo();
+		if(!empty($page)){
+				$start = ($page - 1) * $limit;
+		}else{ 
+			$start = 0;
+		}
+		$log_datas = $conn->prepare("SELECT * FROM `log_access` WHERE `case_no` = :case_no AND `public_ip` = :public_ip ORDER BY `id` DESC LIMIT {$start}, {$limit}");
+		
+		$log_datas->bindParam(':case_no', $case_no);
+		$log_datas->bindParam(':public_ip', $public_ip);
+		$log_datas->execute();
+		return $log_datas->fetchAll();
+	}
+
+	public function getAllSysLogByIp($public_ip, $case_no,$page,$limit){
+		$conn = connect_pdo();
+		if(!empty($page)){
+				$start = ($page - 1) * $limit;
+		}else{ 
+			$start = 0;
+		}
+		$log_datas = $conn->prepare("SELECT * FROM `log_sys` WHERE `case_no` = :case_no AND `public_ip` = :public_ip ORDER BY `id` DESC LIMIT {$start}, {$limit}");
+		
+		$log_datas->bindParam(':case_no', $case_no);
+		$log_datas->bindParam(':public_ip', $public_ip);
+		$log_datas->execute();
+		return $log_datas->fetchAll();
+	}
+
+	private function isValidateDate($date,$format)
+	{
+	    $d = DateTime::createFromFormat($format, $date);
+	    return $d && $d->format($format) === $date;
+	}
+}
+	
 ?>

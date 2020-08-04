@@ -219,4 +219,8 @@ function shuffle_array($list) {
   return $random; 
 } 
 
+function getBaseUrl(){
+  return 'http://localhost/log-analyzer/';
+}
+
 ?>

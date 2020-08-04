@@ -15,7 +15,7 @@ if(isset($_SESSION['user_id'])) {
 }
 if(!empty($user)&&$user['role'] == 'admin'):
 $title = "Insight";
-include_once('includes/header.php');
+
       if(!isset($_GET['page'])) {
         header('Location: ?page=1');
         exit();}
@@ -23,6 +23,7 @@ include_once('includes/header.php');
       $obj->pageData();
       $data_log = $obj->pageData();
       $pagination = $obj->pagination();
+      include_once('includes/header.php');
            
  ?>
 <div class="row">
@@ -36,35 +37,35 @@ include_once('includes/header.php');
       <div class="card">
         <div class="card-content">
           <table class="responsive-table bordered">
-			<thead>
-			  <tr>
-				<th>#</th>
-				<th>IP</th>
-				<th>Time</th>
-				<th>Date</th>
-				<th>Referrer URL</th>
-				<th>User Agent</th>
-			  </tr>
-			</thead>
+      <thead>
+        <tr>
+        <th>#</th>
+        <th>IP</th>
+        <th>Time</th>
+        <th>Date</th>
+        <th>Referrer URL</th>
+        <th>User Agent</th>
+        </tr>
+      </thead>
             <tbody>
-			<?php
+      <?php
    
     foreach($data_log as $user_log_infos) {
-		$pieces = explode(" ", $user_log_infos['date_time']);
-		$date= $pieces[0];
-		$time = $pieces[1];
+    $pieces = explode(" ", $user_log_infos['date_time']);
+    $date= $pieces[0];
+    $time = $pieces[1];
     ?>
               <tr>
-			    <td><?php echo $user_log_infos['id']; ?></td>
-				<td><?php echo $user_log_infos['IP']; ?></td>
-				<td><?php echo $time; ?></td>
-				<td><?php echo $date; ?></td>
-				<td><?php echo $user_log_infos['url']; ?></td>
+          <td><?php echo $user_log_infos['id']; ?></td>
+        <td><?php echo $user_log_infos['IP']; ?></td>
+        <td><?php echo $time; ?></td>
+        <td><?php echo $date; ?></td>
+        <td><?php echo $user_log_infos['url']; ?></td>
                 <td><a class="tooltipped" data-position="top" data-tooltip="<?php echo 'Browser : '.$user_log_infos['Browser'];  echo ' os : '.$user_log_infos['Platform']; ?>"><?php echo $user_log_infos['user_agent']; ?></a>
                 </td>
               </tr><?php } ?>
-	       </tbody>
-		  </table>
+         </tbody>
+      </table>
         </div>
       </div><?php echo $pagination; ?>
     </div>
@@ -72,31 +73,31 @@ include_once('includes/header.php');
       <div class="card">
         <div class="card-content">
          <table class="responsive-table bordered">
-			<thead>
-			  <tr>
-				<th>#</th>
-				<th>IP</th>
-				<th>Time</th>
-				<th>Date</th>        
-			  </tr>
-			</thead>
+      <thead>
+        <tr>
+        <th>#</th>
+        <th>IP</th>
+        <th>Time</th>
+        <th>Date</th>        
+        </tr>
+      </thead>
             <tbody><?php
     $user_log_infos = $conn->prepare('SELECT * FROM login_attempts order by fail_time desc ');
     $user_log_infos->execute();
     $user_log_data = $user_log_infos->fetchAll();
     foreach($user_log_data as $user_log_infos) {
-		$pieces = explode(" ", $user_log_infos['fail_time']);
-		$date= $pieces[0];
-		$time = $pieces[1];
+    $pieces = explode(" ", $user_log_infos['fail_time']);
+    $date= $pieces[0];
+    $time = $pieces[1];
     ?>
               <tr>
-			    <td><?php echo $user_log_infos['id']; ?></td>
-				<td><?php echo $user_log_infos['public_ip']; ?></td>
-				<td><?php echo $time; ?></td>
-				<td><?php echo $date; ?></td>
+          <td><?php echo $user_log_infos['id']; ?></td>
+        <td><?php echo $user_log_infos['public_ip']; ?></td>
+        <td><?php echo $time; ?></td>
+        <td><?php echo $date; ?></td>
               </tr><?php } ?>
-	       </tbody>
-		  </table> 
+         </tbody>
+      </table> 
         </div>
       </div>
     </div>
