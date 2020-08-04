@@ -98,7 +98,7 @@ function access($filename) {
 	$values = array();
 
 	foreach($file as $line) {
-		$list = explode(" ", $line);
+		
 		// IP
 		$public_ip = preg_match('/^(\S+) /', $line, $out) ? $out[1] : 'no match';//$this->check_ip($list[0]);
 		// Date
@@ -117,15 +117,6 @@ function access($filename) {
 		$link_ref = preg_match('/"(http.+?)"/', $line, $out) ? $out[1] : 'no match';
 		// Useragent
 		$useragent = preg_match('/"(\w{3,}\/\d.{5,}?)"/', $line, $out) ? $out[1] : 'no match';
-
-		$co = count($list) - 1;
-		$userage = array();
-		for ($i = 11; $i <= $co; $i) {
-		  $userage[] = $list[$i++];
-		}
-		$useragent = implode(' ', $userage);
-		$useragent = substr($useragent, 1, -2);
-		$useragent = str_replace('"','', $useragent);
 	  	// Browser
 		$result = new WhichBrowser\Parser($useragent);
 
