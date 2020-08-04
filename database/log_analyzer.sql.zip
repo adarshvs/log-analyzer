@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 01, 2020 at 05:01 PM
+-- Generation Time: Aug 04, 2020 at 05:33 AM
 -- Server version: 10.4.10-MariaDB
 -- PHP Version: 7.2.25
 
@@ -69,7 +69,14 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
   `public_ip` varchar(100) NOT NULL,
   `fail_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `login_attempts`
+--
+
+INSERT INTO `login_attempts` (`id`, `username`, `password`, `public_ip`, `fail_time`) VALUES
+(1, 'admin', 'admin', '157.46.182.1\n', '2020-08-04 11:01:28');
 
 -- --------------------------------------------------------
 
@@ -82,7 +89,7 @@ CREATE TABLE IF NOT EXISTS `log_access` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_no` varchar(200) NOT NULL,
   `public_ip` varchar(15) NOT NULL,
-  `date_time` varchar(200) NOT NULL,
+  `date_time` datetime NOT NULL,
   `timezone` varchar(200) NOT NULL,
   `method` varchar(10) NOT NULL,
   `http_header` varchar(500) NOT NULL,
@@ -133,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `profile_pic` varchar(200) NOT NULL,
   `register_time` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
@@ -154,11 +161,11 @@ CREATE TABLE IF NOT EXISTS `user_activity_logs` (
   `IP` varchar(200) NOT NULL,
   `Browser` varchar(200) NOT NULL,
   `Platform` varchar(200) NOT NULL,
-  `date_time` datetime(6) NOT NULL,
+  `date_time` datetime NOT NULL,
   `user_agent` varchar(200) NOT NULL,
   `url` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

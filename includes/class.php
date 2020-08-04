@@ -102,7 +102,7 @@ function access($filename) {
 		// IP
 		$public_ip = preg_match('/^(\S+) /', $line, $out) ? $out[1] : 'no match';//$this->check_ip($list[0]);
 		// Date
-		$date_time = preg_match('/\[(.+)\]/', $line, $out) ? $out[1] : 'no match';
+		$date_time = $date = date('Y-m-d H:i:s', strtotime(preg_match('/\[(.+)\]/', $line, $out) ? $out[1] : 'no match'));
 		// Timezone
 		$timezone = preg_match('/\[(.+)\]/', $line, $out) ? $out[1] : 'no match';
 		// Method
