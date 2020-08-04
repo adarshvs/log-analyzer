@@ -98,6 +98,7 @@ function access($filename) {
 
 	foreach($file as $line) {
 		
+		
 		// IP
 		$public_ip = preg_match('/^(\S+) /', $line, $out) ? $out[1] : 'no match';//$this->check_ip($list[0]);
 		// Date
@@ -109,13 +110,27 @@ function access($filename) {
 		// HTTP Header
 		$http_header = str_replace($method,"",str_replace('"', "", (preg_match('/"(.*?)"/', $line, $out) ? $out[0] : 'no match')));
 		// HTTP Code
-		$http_response = preg_match('/ \d+ /', $line, $out) ? $out[0] : 'no match'; 
+		preg_match_all('/ (\d{3,8})/', $line, $rdt) ;
+		$http_codes = array('100', '101', '102', '103', '200', '201', '202', '203', '204', '205', '206', '207', '208', '226', '300', '301', '302', '303', '304', '305', '306', '307', '308', '400', '401', '402', '403', '404', '405', '406', '407', '408', '409', '410', '411', '412', '413', '414', '415', '416', '417', '421', '422', '423', '424', '425', '426', '427', '428', '429', '430', '431', '451', '500', '501', '502', '503', '504', '505', '506', '507', '508', '509', '510', '511');
+		$result_byte  = $rdt[1];
+		$http_response = "N/A";
 		// File bytes
-		$file_bytes = preg_match('/ \d{4,8}/', $line, $out) ? $out[0] : 'no match';
+		$file_bytes = "0";
+		foreach($result_byte as $res){
+			if(in_array($res,$http_codes)){
+				$http_response = $res;
+				}
+				if(!in_array($res,$http_codes)){
+					$file_bytes = $res;
+				
+				}
+			}
 		// Reference
 		$link_ref = preg_match('/"(http.+?)"/', $line, $out) ? $out[1] : 'no match';
 		// Useragent
 		$useragent = preg_match('/"(\w{3,}\/\d.{5,}?)"/', $line, $out) ? $out[1] : 'no match';
+		//raw data line
+	  	$raw_data = $line;
 	  	// Browser
 		$result = new WhichBrowser\Parser($useragent);
 
@@ -127,7 +142,7 @@ function access($filename) {
 		$case_no = $this->case_no;
 	    $country= getCountryFromIP($public_ip, " NamE ");
 
-		$new_values_string = "('$case_no', '$public_ip', '$date_time', '$timezone', '$method', '$http_header', '$http_response', '$file_bytes', '$link_ref', '$useragent', '$browsername', '$country' ) " ;
+		$new_values_string = "('$case_no', '$public_ip', '$date_time', '$timezone', '$method', '$http_header', '$http_response', '$file_bytes', '$link_ref', '$useragent', '$browsername', '$country', '$raw_data' ) " ;
 		$values_parts[] = $new_values_string ;
 		$values[] = $new_values_string ;
 		
@@ -136,7 +151,7 @@ function access($filename) {
 	$conn = $this->conn();
 	$values_part = implode(',', $values_parts) ;
 
-	$log_access_sql = sprintf("INSERT INTO `log_access`(`case_no`, `public_ip`, `date_time`, `timezone`, `method`, `http_header`, `http_response`, `file_bytes`, `link_ref`, `useragent`, `browser`,`country`) VALUES %s", $values_part) ;
+	$log_access_sql = sprintf("INSERT INTO `log_access`(`case_no`, `public_ip`, `date_time`, `timezone`, `method`, `http_header`, `http_response`, `file_bytes`, `link_ref`, `useragent`, `browser`,`country`,`raw_data`) VALUES %s", $values_part) ;
 
 	$sql_query_result = $conn->query($log_access_sql);
 

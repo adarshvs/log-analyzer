@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: Aug 04, 2020 at 05:33 AM
--- Server version: 10.4.10-MariaDB
--- PHP Version: 7.2.25
+-- Host: 127.0.0.1
+-- Generation Time: Aug 04, 2020 at 07:51 PM
+-- Server version: 10.4.13-MariaDB
+-- PHP Version: 7.4.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -28,13 +27,18 @@ SET time_zone = "+00:00";
 -- Table structure for table `attack_det`
 --
 
-DROP TABLE IF EXISTS `attack_det`;
-CREATE TABLE IF NOT EXISTS `attack_det` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `attack_det` (
+  `id` int(11) NOT NULL,
   `tag` varchar(200) DEFAULT NULL,
-  `tag_category` varchar(20) NOT NULL,
-  PRIMARY KEY (`id`)
+  `tag_category` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `attack_det`
+--
+
+INSERT INTO `attack_det` (`id`, `tag`, `tag_category`) VALUES
+(1, '\'', 'mansqli');
 
 -- --------------------------------------------------------
 
@@ -42,18 +46,25 @@ CREATE TABLE IF NOT EXISTS `attack_det` (
 -- Table structure for table `case_details`
 --
 
-DROP TABLE IF EXISTS `case_details`;
-CREATE TABLE IF NOT EXISTS `case_details` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `case_details` (
+  `id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
   `case_no` varchar(200) NOT NULL,
   `ref_no` varchar(200) NOT NULL,
   `site_url` varchar(255) NOT NULL,
   `evidence_file` varchar(255) NOT NULL,
   `date` date NOT NULL,
-  `registered_date` datetime NOT NULL,
-  PRIMARY KEY (`id`)
+  `registered_date` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `case_details`
+--
+
+INSERT INTO `case_details` (`id`, `username`, `case_no`, `ref_no`, `site_url`, `evidence_file`, `date`, `registered_date`) VALUES
+(1, 'admin', '123', '321', 'http://sad', '2145', '2020-08-04', '2020-08-04 10:05:14'),
+(2, 'admin', '7896', '7896', 'http://test.com', '7896', '2020-08-04', '2020-08-04 12:10:20'),
+(3, 'admin', '456', '456', 'http://test', '456', '2020-08-04', '2020-08-04 13:18:30');
 
 -- --------------------------------------------------------
 
@@ -61,22 +72,13 @@ CREATE TABLE IF NOT EXISTS `case_details` (
 -- Table structure for table `login_attempts`
 --
 
-DROP TABLE IF EXISTS `login_attempts`;
-CREATE TABLE IF NOT EXISTS `login_attempts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `login_attempts` (
+  `id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `public_ip` varchar(100) NOT NULL,
-  `fail_time` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `login_attempts`
---
-
-INSERT INTO `login_attempts` (`id`, `username`, `password`, `public_ip`, `fail_time`) VALUES
-(1, 'admin', 'admin', '157.46.182.1\n', '2020-08-04 11:01:28');
+  `fail_time` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -84,12 +86,11 @@ INSERT INTO `login_attempts` (`id`, `username`, `password`, `public_ip`, `fail_t
 -- Table structure for table `log_access`
 --
 
-DROP TABLE IF EXISTS `log_access`;
-CREATE TABLE IF NOT EXISTS `log_access` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `log_access` (
+  `id` int(11) NOT NULL,
   `case_no` varchar(200) NOT NULL,
   `public_ip` varchar(15) NOT NULL,
-  `date_time` datetime NOT NULL,
+  `date_time` datetime NOT NULL DEFAULT current_timestamp(),
   `timezone` varchar(200) NOT NULL,
   `method` varchar(10) NOT NULL,
   `http_header` varchar(500) NOT NULL,
@@ -99,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `log_access` (
   `useragent` text NOT NULL,
   `browser` varchar(200) NOT NULL,
   `country` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`)
+  `raw_data` varchar(1000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -108,16 +109,14 @@ CREATE TABLE IF NOT EXISTS `log_access` (
 -- Table structure for table `log_sys`
 --
 
-DROP TABLE IF EXISTS `log_sys`;
-CREATE TABLE IF NOT EXISTS `log_sys` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `log_sys` (
+  `id` int(11) NOT NULL,
   `case_no` varchar(200) NOT NULL,
   `public_ip` varchar(15) NOT NULL,
   `date_time` datetime NOT NULL,
   `protocol` varchar(100) NOT NULL,
   `notification` varchar(100) NOT NULL,
-  `message` text NOT NULL,
-  PRIMARY KEY (`id`)
+  `message` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -126,9 +125,8 @@ CREATE TABLE IF NOT EXISTS `log_sys` (
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
   `f_name` varchar(200) NOT NULL,
   `l_name` varchar(200) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -138,9 +136,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `profile_pic` varchar(200) NOT NULL,
-  `register_time` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  `register_time` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
@@ -155,17 +152,107 @@ INSERT INTO `users` (`id`, `f_name`, `l_name`, `email`, `gender`, `dob`, `role`,
 -- Table structure for table `user_activity_logs`
 --
 
-DROP TABLE IF EXISTS `user_activity_logs`;
-CREATE TABLE IF NOT EXISTS `user_activity_logs` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `user_activity_logs` (
+  `id` int(11) NOT NULL,
   `IP` varchar(200) NOT NULL,
   `Browser` varchar(200) NOT NULL,
   `Platform` varchar(200) NOT NULL,
   `date_time` datetime NOT NULL,
   `user_agent` varchar(200) NOT NULL,
-  `url` varchar(200) NOT NULL,
-  PRIMARY KEY (`id`)
+  `url` varchar(200) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `attack_det`
+--
+ALTER TABLE `attack_det`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `case_details`
+--
+ALTER TABLE `case_details`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `login_attempts`
+--
+ALTER TABLE `login_attempts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `log_access`
+--
+ALTER TABLE `log_access`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `log_sys`
+--
+ALTER TABLE `log_sys`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `user_activity_logs`
+--
+ALTER TABLE `user_activity_logs`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `attack_det`
+--
+ALTER TABLE `attack_det`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `case_details`
+--
+ALTER TABLE `case_details`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `login_attempts`
+--
+ALTER TABLE `login_attempts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `log_access`
+--
+ALTER TABLE `log_access`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `log_sys`
+--
+ALTER TABLE `log_sys`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `user_activity_logs`
+--
+ALTER TABLE `user_activity_logs`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
