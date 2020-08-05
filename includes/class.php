@@ -98,17 +98,16 @@ function access($filename) {
 
 	foreach($file as $line) {
 		
-		
 		// IP
-		$public_ip = preg_match('/^(\S+) /', $line, $out) ? $out[1] : 'no match';//$this->check_ip($list[0]);
+		$public_ip = preg_match('/^(\S+) /', $line, $out) ? $out[1] : '-';//$this->check_ip($list[0]);
 		// Date
-		$date_time = $date = date('Y-m-d H:i:s', strtotime(preg_match('/\[(.+)\]/', $line, $out) ? $out[1] : 'no match'));
+		$date_time = $date = date('Y-m-d H:i:s', strtotime(preg_match('/\[(.+)\]/', $line, $out) ? $out[1] : '-'));
 		// Timezone
-		$timezone = preg_match('/\[(.+)\]/', $line, $out) ? $out[1] : 'no match';
+		$timezone = preg_match('/\[(.+)\]/', $line, $out) ? $out[1] : '-';
 		// Method
-		$method = preg_match('/(GET|POST|DELETE|PUT).+?/', $line, $out) ? $out[0] : 'no match';
+		$method = preg_match('/(GET|POST|DELETE|PUT).+?/', $line, $out) ? $out[0] : '-';
 		// HTTP Header
-		$http_header = str_replace($method,"",str_replace('"', "", (preg_match('/"(.*?)"/', $line, $out) ? $out[0] : 'no match')));
+		$http_header = str_replace($method,"",str_replace('"', "", (preg_match('/"(.*?)"/', $line, $out) ? $out[0] : '-')));
 		// HTTP Code
 		preg_match_all('/ (\d{3,8})/', $line, $rdt) ;
 		$http_codes = array('100', '101', '102', '103', '200', '201', '202', '203', '204', '205', '206', '207', '208', '226', '300', '301', '302', '303', '304', '305', '306', '307', '308', '400', '401', '402', '403', '404', '405', '406', '407', '408', '409', '410', '411', '412', '413', '414', '415', '416', '417', '421', '422', '423', '424', '425', '426', '427', '428', '429', '430', '431', '451', '500', '501', '502', '503', '504', '505', '506', '507', '508', '509', '510', '511');
@@ -126,9 +125,9 @@ function access($filename) {
 				}
 			}
 		// Reference
-		$link_ref = preg_match('/"(http.+?)"/', $line, $out) ? $out[1] : 'no match';
+		$link_ref = preg_match('/"(http.+?)"/', $line, $out) ? $out[1] : '-';
 		// Useragent
-		$useragent = preg_match('/"(\w{3,}\/\d.{5,}?)"/', $line, $out) ? $out[1] : 'no match';
+		$useragent = preg_match('/"(\w{3,}\/\d.{5,}?)"/', $line, $out) ? $out[1] : '-';
 		//raw data line
 	  	$raw_data = $line;
 	  	// Browser
@@ -399,13 +398,13 @@ class Model
 			
 		    if(check_matches($scans['link_ref'], $manual_injection)) { 
 	    	 	$scans['attack_type'] = 'MANUAL_SQL_INJECTION';
-	    	 	$scans['attack_description'] = 'Manual SQL injection on referal url';
+	    	 	$scans['attack_description'] = 'Manual SQL injection on Referrer URL';
 		      	$result[] = $scans;
 		    }
 		
 		    if(check_matches($scans['link_ref'], $auto_injection)) { 
 		    	$scans['attack_type'] = 'AUTO_SQL_INJECTION';
-	    	 	$scans['attack_description'] = 'Auto SQL injection on referal url';
+	    	 	$scans['attack_description'] = 'Auto SQL injection on Referrer URL';
 		      	$result[] = $scans;
 		    }
 		
@@ -423,13 +422,13 @@ class Model
 		
 		    if(check_matches($scans['link_ref'], $default_shell)) { 
 		    	$scans['attack_type'] = 'DEFAULT_SHELL';
-	    	 	$scans['attack_description'] = 'Default shell on referal url';
+	    	 	$scans['attack_description'] = 'Default shell on Referrer URL';
 		      	$result[] = $scans;
 		    }
 		
 		    if(check_matches($scans['link_ref'], $xss)) {
 		    	$scans['attack_type'] = 'XSS_DET';
-	    	 	$scans['attack_description'] = 'XSS attack on referal url'; 
+	    	 	$scans['attack_description'] = 'XSS attack on Referrer URL'; 
 		      	$result[] = $scans;
 		    }
 		
@@ -597,6 +596,38 @@ class Model
 		
 		$log_datas->bindParam(':case_no', $case_no);
 		$log_datas->bindParam(':public_ip', $public_ip);
+		$log_datas->execute();
+		return $log_datas->fetchAll();
+	}
+	public function getAllAccessLogByDate($date_time, $case_no,$page,$limit){
+		$conn = connect_pdo();
+		$date_log = date('Y-m-d', strtotime($date_time));
+		
+		if(!empty($page)){
+				$start = ($page - 1) * $limit;
+		}else{ 
+			$start = 0;
+		}
+		$log_datas = $conn->prepare("SELECT * FROM `log_access` WHERE `case_no` = :case_no AND DATE(date_time) = :date_log ORDER BY `id` DESC LIMIT {$start}, {$limit}");
+		
+		$log_datas->bindParam(':case_no', $case_no);
+		$log_datas->bindParam(':date_log', $date_log);
+		$log_datas->execute();
+		return $log_datas->fetchAll();
+	}
+
+	public function getAllSysLogByDate($date_time, $case_no,$page,$limit){
+		$conn = connect_pdo();
+		$date_log = date('Y-m-d', strtotime($date_time));
+		if(!empty($page)){
+				$start = ($page - 1) * $limit;
+		}else{ 
+			$start = 0;
+		}
+		$log_datas = $conn->prepare("SELECT * FROM `log_sys` WHERE `case_no` = :case_no AND DATE(date_time) = :date_log ORDER BY `id` DESC LIMIT {$start}, {$limit}");
+		
+		$log_datas->bindParam(':case_no', $case_no);
+		$log_datas->bindParam(':date_log', $date_log);
 		$log_datas->execute();
 		return $log_datas->fetchAll();
 	}
