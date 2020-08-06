@@ -62,7 +62,7 @@
 
     <div class="col s12 m12">
       <a href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=&print" class="right btn-floating waves-effect waves-light white z-depth-1"><i class="material-icons grey-text text-darken-3">&#xE8AD;</i></a>
-      <a target="_blank" class="blue waves-effect waves-light btn" href="log_detail_view.php?show=access_log&data=<?php echo $_GET['data']; ?>">Access Log</a>&nbsp;&nbsp;&nbsp;
+      &nbsp;&nbsp;&nbsp;
 
     <h4 class="light grey-text text-darken-2">Case <?php echo decrypt($_GET['data']); ?></h4>
     <?php 
@@ -102,6 +102,11 @@
     </div>
   </div>
   <div class="card-panel">
+    
+    <h5 class="card-title container-5-right" style="
+    display: inline;
+    float: right;
+"><a target="_blank" class="waves-effect waves-light btn" href="log_detail_view.php?show=access_log&data=<?php echo $_GET['data']; ?>">Show All</a></h5>
     <h5 class="card-title">At a glance</h5><hr>
   
       <div id='calendar' style="margin-top: 20px"></div>
@@ -142,68 +147,68 @@ if(isset($_GET['attack_date']) && !empty($_GET['attack_date'])){
           <p><i class="mdi mdi-send" ></i> <b>Method : </b><?php echo $log_data['method']; ?>&nbsp;&nbsp;
              <i class="mdi mdi-reply"></i> <b>Response : </b><?php 
                 $status_code1 = "100";
-            $status_code2 = "101";
-            $status_code3 = "102";
-            $status_code4 = "200";
-            $status_code5 = "201";
-            $status_code6 = "202";
-            $status_code7 = "203";
-            $status_code8 = "204";
-            $status_code9 = "205";
-            $status_code10 = "206";
-            $status_code11 = "207";
-            $status_code12 = "208";
-            $status_code13 = "226";
-            $status_code14 = "300";
-            $status_code15 = "301";
-            $status_code16 = "302";
-            $status_code17 = "303";
-            $status_code18 = "304";
-            $status_code19 = "305";
-            $status_code20 = "307";
-            $status_code21 = "308";
-            $status_code22 = "400";
-            $status_code23 = "401";
-            $status_code24 = "402";
-            $status_code25 = "403";
-            $status_code26 = "404";
-            $status_code27 = "405";
-            $status_code28 = "406";
-            $status_code29 = "407";
-            $status_code30 = "408";
-            $status_code31 = "409";
-            $status_code32 = "410";
-            $status_code33 = "411";
-            $status_code34 = "412";
-            $status_code35 = "413";
-            $status_code36 = "414";
-            $status_code37 = "415";
-            $status_code38 = "416";
-            $status_code39 = "417";
-            $status_code40 = "418";
-            $status_code41 = "421";
-            $status_code42 = "422";
-            $status_code43 = "423";
-            $status_code44 = "424";
-            $status_code45 = "426";
-            $status_code46 = "428";
-            $status_code47 = "429";
-            $status_code48 = "431";
-            $status_code49 = "444";
-            $status_code50 = "451";
-            $status_code51 = "499";
-            $status_code52 = "500";
-            $status_code53 = "501";
-            $status_code54 = "502";
-            $status_code55 = "503";
-            $status_code56 = "504";
-            $status_code57 = "505";
-            $status_code58 = "506";
-            $status_code59 = "507";
-            $status_code60 = "508";
-            $status_code61 = "510";
-            $status_code62 = "511";
-            $status_code63 = "599";
+                $status_code2 = "101";
+                $status_code3 = "102";
+                $status_code4 = "200";
+                $status_code5 = "201";
+                $status_code6 = "202";
+                $status_code7 = "203";
+                $status_code8 = "204";
+                $status_code9 = "205";
+                $status_code10 = "206";
+                $status_code11 = "207";
+                $status_code12 = "208";
+                $status_code13 = "226";
+                $status_code14 = "300";
+                $status_code15 = "301";
+                $status_code16 = "302";
+                $status_code17 = "303";
+                $status_code18 = "304";
+                $status_code19 = "305";
+                $status_code20 = "307";
+                $status_code21 = "308";
+                $status_code22 = "400";
+                $status_code23 = "401";
+                $status_code24 = "402";
+                $status_code25 = "403";
+                $status_code26 = "404";
+                $status_code27 = "405";
+                $status_code28 = "406";
+                $status_code29 = "407";
+                $status_code30 = "408";
+                $status_code31 = "409";
+                $status_code32 = "410";
+                $status_code33 = "411";
+                $status_code34 = "412";
+                $status_code35 = "413";
+                $status_code36 = "414";
+                $status_code37 = "415";
+                $status_code38 = "416";
+                $status_code39 = "417";
+                $status_code40 = "418";
+                $status_code41 = "421";
+                $status_code42 = "422";
+                $status_code43 = "423";
+                $status_code44 = "424";
+                $status_code45 = "426";
+                $status_code46 = "428";
+                $status_code47 = "429";
+                $status_code48 = "431";
+                $status_code49 = "444";
+                $status_code50 = "451";
+                $status_code51 = "499";
+                $status_code52 = "500";
+                $status_code53 = "501";
+                $status_code54 = "502";
+                $status_code55 = "503";
+                $status_code56 = "504";
+                $status_code57 = "505";
+                $status_code58 = "506";
+                $status_code59 = "507";
+                $status_code60 = "508";
+                $status_code61 = "510";
+                $status_code62 = "511";
+                $status_code63 = "599";
             
                         if(strpos($log_data['http_response'], $status_code1) !== false) {
                             $message="Continue";

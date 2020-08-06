@@ -68,7 +68,7 @@ include_once('includes/header.php');
           }
 
         ?>
-				<a <?php echo $set_btn_access; ?> class="blue waves-effect waves-light btn" href="analyze.php?show=access_log&data=<?php echo encrypt($case_overview['case_no']); ?>">Access Log</a>&nbsp;&nbsp;&nbsp;<a <?php echo $set_btn_sys; ?> class="blue waves-effect waves-light btn" href="analyze.php?show=sys_log&data=<?php echo encrypt($case_overview['case_no']); ?>">Sys Log</a>
+				<a <?php echo $set_btn_access; ?> class="blue waves-effect waves-light btn" href="analyze.php?show=access_log&data=<?php echo encrypt($case_overview['case_no']); ?>">Access Log</a>&nbsp;&nbsp;&nbsp;<a <?php echo $set_btn_sys; ?> class="blue waves-effect waves-light btn" href="analyze.php?show=sys_log&data=<?php echo encrypt($case_overview['case_no']); ?>&page=1">Sys Log</a>
         </div>
 			</div>
 		</div>
