@@ -62,6 +62,8 @@
 
     <div class="col s12 m12">
       <a href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=&print" class="right btn-floating waves-effect waves-light white z-depth-1"><i class="material-icons grey-text text-darken-3">&#xE8AD;</i></a>
+      <a target="_blank" class="blue waves-effect waves-light btn" href="log_detail_view.php?show=access_log&data=<?php echo $_GET['data']; ?>">Access Log</a>&nbsp;&nbsp;&nbsp;
+
     <h4 class="light grey-text text-darken-2">Case <?php echo decrypt($_GET['data']); ?></h4>
     <?php 
       if (!(isset($_GET['public_ip'])||isset($_GET['date_time']))){ 

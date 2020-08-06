@@ -70,7 +70,7 @@
     <?php } ?>
     <li><div class="divider"></div></li>
     <li><a class="waves-effect" href="logout.php"><i class="material-icons">&#xE879;</i>Logout</a></li>
-    <li><a class="waves-effect" href=""><i class="material-icons">&#xE5D5;</i><span id="timer">30 m 00 s</span></a></li>
+    <!--<li><a class="waves-effect" href=""><i class="material-icons">&#xE5D5;</i><span id="timer">30 m 00 s</span></a></li> -->
   </ul>
   </header>
   <main>
