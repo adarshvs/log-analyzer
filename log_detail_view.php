@@ -337,7 +337,51 @@ if(!empty($_GET['show'] && $_GET['data'])) {
 </div>
 <?php 
    }
-  }  
+  }if($_GET['show'] == 'sys_log'){
+
+			if(!isset($_GET['page'])) {
+				header('Location: ?show='.$_GET['show'].'&data='.$_GET['data'].'&page=1');
+			}
+			$p_data = new Page('log_sys', $_GET['page'], $_GET['show'], $_GET['data'], 20);
+			$data = $p_data->pageData();
+			$pagination = $p_data->pagination();
+            include_once('includes/header.php');
+?><div class="row">
+  <div class="col s12">
+    <?php echo $pagination; ?>
+    <div class="card-panel" style="
+    overflow-x: scroll;
+    overflow-y: scroll;
+    max-height: 500px;
+">
+   <table class="responsive-table bordered">
+    
+	<thead>
+    <tr>
+      <th>#</th>
+  		<th>IP</th>
+  		<th>Timestamp</th>
+  		<th>Protocol</th>
+  		<th>Notification</th>
+  		<th>Message</th>
+		</tr>
+  <tbody><?php foreach($data as $log_data) { ?>
+      <tr>
+      <td><?php echo $log_data['id']; ?></td>
+      <td><?php echo $log_data['public_ip']; ?><a class="btn-floating btn-flat white waves-effect waves-light" href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=<?php echo $_GET['page']; ?>&info=<?php echo encrypt($log_data['public_ip']); ?>"><i class="material-icons grey-text text-darken-3">&#xE8B6;</i></a></td>
+      <td><?php echo date("d M Y h:i A", strtotime($log_data['date_time'])); ?></td>
+      <td><?php echo $log_data['protocol']; ?></td>
+      <td><?php echo $log_data['notification']; ?></td>
+      <td><?php echo $log_data['message']; ?></td>
+    </tr><?php } ?>
+    </tbody>
+	</thead>
+   </table>
+ </div>
+</div><?php echo $pagination;?>
+</div>
+
+<?php		}  
  
  include_once('includes/footer.php'); 
 else: ?>
