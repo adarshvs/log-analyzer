@@ -631,11 +631,155 @@ class Model
 		$log_datas->execute();
 		return $log_datas->fetchAll();
 	}
+	public function getAllAccessLogByDateForCalendar($date, $case_no,$page,$limit){
+		$conn = connect_pdo();
+		$date_log = date('Y-m-d', strtotime($date_time));
+		
+		if(!empty($page)){
+				$start = ($page - 1) * $limit;
+		}else{ 
+			$start = 0;
+		}
+		$log_datas = $conn->prepare("SELECT * FROM `log_access` WHERE `case_no` = :case_no AND DATE(date_time) = :date_log ORDER BY `id` DESC LIMIT {$start}, {$limit}");
+		
+		$log_datas->bindParam(':case_no', $case_no);
+		$log_datas->bindParam(':date_log', $date_log);
+		$log_datas->execute();
+		return $log_datas->fetchAll();
+	}
 
 	private function isValidateDate($date,$format)
 	{
 	    $d = DateTime::createFromFormat($format, $date);
 	    return $d && $d->format($format) === $date;
+	}
+}
+
+/* AccessLogModel*/
+
+class AccessLogModel {
+	
+	private $page_data=1; 
+	public $data;
+
+	public function pageData($table, $page_data, $show_data, $url_get, $limit,$date) {
+
+			$start_date_time = date('Y-m-d H:i:s', strtotime($date.' 00:00:00'));
+			$end_date_time = date('Y-m-d H:i:s', strtotime($date.' 24:00:00'));
+			$adjacents = 2;
+			$limit = $limit;
+			$tablename = $table;
+			$page = $page_data;
+			$url_data_decrypt = decrypt($url_get);
+			$page = stripslashes($page);
+			$page = htmlspecialchars($page);
+			$page = strip_tags(trim($page));
+			$page = htmlentities($page, ENT_QUOTES, 'UTF-8');
+			$page = str_replace("&amp;", "&", $page);
+			$page = str_replace("amp;amp;", "", $page);
+			$page = str_replace("&amp;", "&", $page);
+			$page = htmlspecialchars($page);
+	
+			if(!empty($page))
+				$start = ($page - 1) * $limit;
+			else 
+				$start = 0;
+			$conn = connect_pdo();
+			$log_datas = $conn->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM `{$tablename}` WHERE case_no = :url_data AND `date_time` BETWEEN :start_date_time AND :end_date_time ORDER BY `id` ASC LIMIT {$start}, {$limit}");
+			$log_datas->bindParam(':url_data', $url_data_decrypt);
+			$log_datas->bindParam(':start_date_time', $start_date_time);
+			$log_datas->bindParam(':end_date_time', $end_date_time);
+			$log_datas->execute();
+			$results = array();
+			while($log_data = $log_datas->fetch(PDO::FETCH_ASSOC)){
+				$results[] = $log_data;
+			}
+			$total = $conn->prepare("SELECT FOUND_ROWS() as total");
+			$total->execute();
+			$total_id = $total->fetch(PDO::FETCH_ASSOC);
+			$id = $total_id['total'];
+
+			if(empty($page)) $page = 1;
+			$prev = $page - 1;
+			$next = $page + 1;
+			$lastpage = ceil($id / $limit);
+			$lpm1 = $lastpage - 1;   
+
+			$pagination = "";
+			if($lastpage > 1) { 
+			$pagination .= '<div class="center">';
+			$pagination .= '<ul class="pagination">';
+
+			if($page > 1) 
+				$pagination.= '<li><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$prev.'"><i class="material-icons">chevron_left</i></a></li>';
+			else
+				$pagination.= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>';  
+
+			if($lastpage < 7 + ($adjacents * 2)) { 
+			  for ($counter = 1; $counter <= $lastpage; $counter++) {
+			    if ($counter == $page)
+			      $pagination.= '<li class="active blue"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			    else
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			  }
+			}
+			elseif($lastpage > 5 + ($adjacents * 2)) {
+			  if($page < 1 + ($adjacents * 2)) {
+				for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++) {
+					if ($counter == $page)
+			      $pagination.= '<li class="active blue"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			    else
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			    }
+			    $pagination.= "...";
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$lpm1.'">'.$lpm1.'</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$lastpage.'">'.$lastpage.'</a></li>';
+			  }
+
+			  elseif($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2)) {
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page=1">1</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page=2">2</a></li>';
+			    $pagination.= "...";
+			    for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++) {
+			      if ($counter == $page)
+			      $pagination.= '<li class="active blue"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			    else
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			    }
+			    $pagination.= "...";
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$lpm1.'">'.$lpm1.'</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$lastpage.'">'.$lastpage.'</a></li>';
+			}else{
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page=1">1</a></li>';
+				$pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page=2">2</a></li>';
+				$pagination.= "...";
+			    for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
+				if ($counter == $page)
+					$pagination.= '<li class="active blue"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+				else
+					$pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+				}
+			}
+		}
+
+			// next button
+			if ($page < $counter - 1) 
+				$pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$next.'"><i class="material-icons">chevron_right</i></a></li>';
+			else
+				$pagination.= '<li class="disabled"><a><i class="material-icons">chevron_right</i></a></li>';
+
+			$pagination.= '</ul>';    
+			$pagination.= '</div>';    
+		}
+		$this->data = $pagination;
+	return $results;
+	}
+
+
+
+	public function pagination() {
+		$pagination = $this->data;
+		return $pagination;
 	}
 }
 	

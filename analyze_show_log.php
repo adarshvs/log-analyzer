@@ -45,14 +45,16 @@
         right: 'dayGridMonth,listMonth'
       },
       initialDate: '2020-08-01',
-      navLinks: true, // can click day/week names to navigate views
+      navLinks: false, // can click day/week names to navigate views
       businessHours: true, // display business hours
       editable: true,
       selectable: true,
-      events: allEvents
+      events: allEvents,
+
     });
 
     calendar.render();
+
 
   });
 
@@ -559,6 +561,21 @@ if(isset($_GET['date_time'])){
     </div>
   </div>
 </div>
-
-
 <?php } ?>
+
+<?php  
+if(isset($_GET['date'])){
+  $obj = new Model();
+  $case_no = decrypt($_GET['data']);
+  try {
+    $p_data = new AccessLogModel();
+    $data = $p_data->pageData('log_access', $_GET['page'], $_GET['show'], $_GET['data'], 20, $_GET['date']);
+    $pagination = $p_data->pagination();
+  
+    include('access_log_table.php');
+  } catch (Exception $e) {
+   // print_r($e->getMessage());
+  }
+ 
+} ?>
+

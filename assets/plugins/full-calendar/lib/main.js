@@ -11529,13 +11529,17 @@ var FullCalendar = (function (exports) {
             return _super !== null && _super.apply(this, arguments) || this;
         }
         TableCellTop.prototype.render = function () {
+            var url_string = window.location.href;
+            var url = new URL(url_string);
+            var case_id = url.searchParams.get("data");
+           
             var props = this.props;
             var navLinkAttrs = this.context.options.navLinks
                 ? { 'data-navlink': buildNavLinkData(props.date), tabIndex: 0 }
                 : {};
             return (createElement(DayCellContent, { date: props.date, dateProfile: props.dateProfile, todayRange: props.todayRange, showDayNumber: props.showDayNumber, extraHookProps: props.extraHookProps, defaultContent: renderTopInner }, function (innerElRef, innerContent) { return (innerContent &&
                 createElement("div", { className: 'fc-daygrid-day-top', ref: innerElRef },
-                    createElement("a", __assign({ className: 'fc-daygrid-day-number' }, navLinkAttrs), innerContent))); }));
+                    createElement("a", __assign({ className: 'fc-daygrid-day-number' }, navLinkAttrs, { href:'?show=access_log&data='+case_id+'&date='+formatDate(props.date)+'&page=1&href=#accessLogTable'}), innerContent))); }));
         };
         return TableCellTop;
     }(BaseComponent));
@@ -11546,6 +11550,20 @@ var FullCalendar = (function (exports) {
         omitZeroMinute: true,
         meridiem: 'narrow'
     });
+    
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) 
+            month = '0' + month;
+        if (day.length < 2) 
+            day = '0' + day;
+
+        return [year, month, day].join('-');
+    }
     function hasListItemDisplay(seg) {
         var display = seg.eventRange.ui.display;
         return display === 'list-item' || (display === 'auto' &&
