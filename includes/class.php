@@ -90,14 +90,56 @@ class Logread {
 		}	
 	}
 
-function access($filename) {
-	ini_set('memory_limit', '-1');
-	
-	$file = file($filename);
-	$values = array();
 
-	foreach($file as $line) {
+	public function access($filename) {
+		ini_set('memory_limit', '-1');
+		$conn = $this->conn();
+		$batch_max_lines = 1000;
+		$lines = [];
+		$file = new \SplFileObject($filename);
+		$inserted = true;
 		
+
+		$conn->beginTransaction();
+		//Multiples of max lines
+		while(!$file->eof()) {
+	 		$values_parts = [];
+	 		$lines[] = $file->fgets();
+
+	 		if(count($lines) == $batch_max_lines){
+				$inserted = $this->processLines($lines,$conn);
+	 		}
+	 	}
+	 	//Balance lines
+	 	if(count($lines) > 0){
+			$_inserted = $this->processLines($lines,$conn);
+ 		}
+
+ 		if ($inserted && $_inserted) {
+ 			$conn->commit();
+ 		}else{
+ 			$conn->rollBack();
+ 		}
+	
+	}
+	public function processLines($lines,$conn){
+		foreach($lines as $line) {
+			$values_parts[] =  $this->accessLogParser($line);
+		}
+		$values_part = implode(',', $values_parts) ;
+		$inserted = $this->insertIntoAccessLog($values_part,$conn);
+		$lines = [];
+
+		return $inserted;
+	}
+	
+	public function insertIntoAccessLog($values_part, $conn){
+		$log_access_sql = sprintf("INSERT INTO `log_access`(`case_no`, `public_ip`, `date_time`, `timezone`, `method`, `http_header`, `http_response`, `file_bytes`, `link_ref`, `useragent`, `browser`,`country`,`raw_data`) VALUES %s", $values_part) ;
+			$sql_query_result = $conn->query($log_access_sql);
+			return $sql_query_result;
+	}
+
+	public function accessLogParser($line){
 		// IP
 		$public_ip = preg_match('/^(\S+) /', $line, $out) ? $out[1] : '-';//$this->check_ip($list[0]);
 		// Date
@@ -118,12 +160,12 @@ function access($filename) {
 		foreach($result_byte as $res){
 			if(in_array($res,$http_codes)){
 				$http_response = $res;
-				}
-				if(!in_array($res,$http_codes)){
-					$file_bytes = $res;
-				
-				}
 			}
+			if(!in_array($res,$http_codes)){
+				$file_bytes = $res;
+			
+			}
+		}
 		// Reference
 		$link_ref = preg_match('/"(http.+?)"/', $line, $out) ? $out[1] : '-';
 		// Useragent
@@ -142,21 +184,9 @@ function access($filename) {
 	    $country= getCountryFromIP($public_ip, " NamE ");
 
 		$new_values_string = "('$case_no', '$public_ip', '$date_time', '$timezone', '$method', '$http_header', '$http_response', '$file_bytes', '$link_ref', '$useragent', '$browsername', '$country', '$raw_data' ) " ;
-		$values_parts[] = $new_values_string ;
-		$values[] = $new_values_string ;
-		
+
+		return $new_values_string;
 	}
-
-	$conn = $this->conn();
-	$values_part = implode(',', $values_parts) ;
-
-	$log_access_sql = sprintf("INSERT INTO `log_access`(`case_no`, `public_ip`, `date_time`, `timezone`, `method`, `http_header`, `http_response`, `file_bytes`, `link_ref`, `useragent`, `browser`,`country`,`raw_data`) VALUES %s", $values_part) ;
-
-	$sql_query_result = $conn->query($log_access_sql);
-
-
-	}
-	
 
 	public function check_ip($ip) {
 		if(filter_var($ip, FILTER_VALIDATE_IP)) {
