@@ -772,6 +772,30 @@ class AccessLogModel {
 		$pagination = $this->data;
 		return $pagination;
 	}
+	public function getAccessLogByDateRange($case_no,$start_date_time,$end_date_time){
+		$conn = connect_pdo();
+		$log_datas = $conn->prepare("SELECT * FROM `log_access` WHERE case_no = :case_no AND `date_time` BETWEEN :start_date_time AND :end_date_time ORDER BY `id` ASC");
+		$log_datas->bindParam(':case_no', $case_no);
+		$log_datas->bindParam(':start_date_time', $start_date_time);
+		$log_datas->bindParam(':end_date_time', $end_date_time);
+		$log_datas->execute();
+		return $log_datas->fetchAll();
+	}
+}
+/* CasedetailModel*/
+
+class CaseDetailLogModel {
+	
+	public function getCaseByNo($case_no){
+		$conn = connect_pdo();
+	
+		$log_datas = $conn->prepare("SELECT * FROM `case_details` WHERE `case_no` = :case_no LIMIT 1");
+		
+		$log_datas->bindParam(':case_no', $case_no);
+		$log_datas->execute();
+		return $log_datas->fetchAll();
+	}
+	
 }
 	
 ?>

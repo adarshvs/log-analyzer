@@ -8,6 +8,7 @@ require_once('includes/UAParser/UAParser.php');
 require_once('includes/geoiploc.php');
 require_once('includes/attack_detection.php');
 require_once('includes/iplogger.php');
+require 'vendor/autoload.php';
 // PDO connection
 function connect_pdo(){
     $dsn = 'mysql:host='.HOST.';dbname='.DBNAME.';charset=utf8';

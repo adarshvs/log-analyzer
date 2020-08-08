@@ -2,6 +2,8 @@
 session_set_cookie_params(0);
 session_start();
 require("includes/connection.php");
+use Dompdf\Dompdf;
+
 if(isset($_SESSION['user_id'])) {
   $conn = connect_pdo();
   $records = $conn->prepare('SELECT * FROM users WHERE id = :id');
@@ -29,14 +31,30 @@ if(!empty($_GET['show'] && $_GET['data'])) {
     }
   }
   if($_GET['show'] == 'access_log'){
-    if(!isset($_GET['page'])) {
-      header('Location: ?show='.$_GET['show'].'&data='.$_GET['data'].'&page=1');
-      exit();
+    if (isset($_GET['export'])) {
+      $dompdf = new Dompdf();
+      $dompdf->set_option('enable_remote', TRUE);
+      $dompdf->set_option('enable_css_float', TRUE);
+      $dompdf->set_option('enable_html5_parser', FALSE);
+
+      $fileUrl = getBaseUrl().'pdf_view.php?show='.$_GET['show'].'&data='.decrypt($_GET['data']).'&date_range='.$_GET['date_range'];
+      $dompdf->loadHtmlFile($fileUrl);
+      $dompdf->setPaper('A4', 'portrait');
+      $dompdf->set_option("isPhpEnabled", true);
+      $dompdf->render();
+      $fileName = decrypt($_GET['data']).'_Report_'.date('Y_m_d_h_i_s').'.pdf';
+      $dompdf->stream($fileName);
+    }else{
+      if(!isset($_GET['page'])) {
+        header('Location: ?show='.$_GET['show'].'&data='.$_GET['data'].'&page=1');
+        exit();
+      }
     }
     $p_data = new Page('log_access', $_GET['page'], $_GET['show'], $_GET['data'], 20);
     $data = $p_data->pageData();
     $pagination = $p_data->pagination();
     include_once('includes/header.php');
+    include('export_pdf_modal.php');
     include('access_log_table.php');
  
   }

@@ -22,5 +22,15 @@
     <?php  if(isset($_GET['show'])) { ?>
     <script src='assets/plugins/full-calendar/lib/main.js'></script>
     <?php } ?>
+    <script type="text/javascript">
+      $(document).ready(function() {
+          $('.date-range-picker').daterangepicker({
+            timePicker: true,
+            locale: {
+              format: 'YYYY-MM-DD'
+            }
+          });
+      });
+    </script>
   </body>
 </html>

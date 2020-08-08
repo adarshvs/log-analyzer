@@ -1,5 +1,10 @@
 <?php 
-$user_agent     =   $_SERVER['HTTP_USER_AGENT'];
+if (isset($_SERVER['HTTP_USER_AGENT'])) {
+    $user_agent     =   $_SERVER['HTTP_USER_AGENT'];
+}else{
+    $user_agent = 'Not Found';
+}
+
 function getOS() { 
     global $user_agent;
     $os_platform    =   "Unknown OS Platform";

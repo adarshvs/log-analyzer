@@ -32,6 +32,9 @@
       background-color: red !important;
       border-color: red !important;
     }
+     .daterangepicker.ltr.show-calendar.opensright{
+      top: 0px !important;
+    }
   </style>
   <body class="grey lighten-4">
   <header>
