@@ -151,7 +151,7 @@ if(isset($_GET['delete'])){
             <td><?php echo $attack_info['id']; ?></td>
             <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
 
-            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
+            <td><a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
           </tr>
          <div id="modal<?php echo $attack_info['id']; ?>" class="modal">
            <div class="modal-content">
@@ -184,7 +184,7 @@ if(isset($_GET['delete'])){
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
             <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
-            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
+            <td><a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
           </tr>
          <div id="modal<?php echo $attack_info['id']; ?>" class="modal">
            <div class="modal-content">
@@ -217,7 +217,7 @@ if(isset($_GET['delete'])){
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
             <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
-            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
+            <td><a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
           </tr>
          <div id="modal<?php echo $attack_info['id']; ?>" class="modal">
            <div class="modal-content">
@@ -250,7 +250,7 @@ if(isset($_GET['delete'])){
           <tr>
             <td><?php echo $attack_info['id']; ?></td>
             <td><?php echo htmlentities($attack_info['tag'], ENT_HTML5  , 'UTF-8'); ?></td>
-            <td><a class="btn-floating waves-effect waves-light-grey white btn-flat" href="?edit="><i class="material-icons grey-text text-darken-3">edit</i></a>&nbsp;<a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
+            <td><a onclick="$('#modal<?php echo $attack_info['id']; ?>').modal('open');" class="btn-floating waves-effect waves-light-grey white btn-flat"><i class="material-icons red-text">delete</i></a></td>
           </tr>
          <div id="modal<?php echo $attack_info['id']; ?>" class="modal">
            <div class="modal-content">
