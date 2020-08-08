@@ -41,14 +41,9 @@ $result = new WhichBrowser\Parser($user_agent);
 		}else{
 			$user_browser = '-';
 		}
-$test_url['link'] = "google.com";
-    $test_url['port'] = 80;
-    $connection = @fsockopen($test_url['link'], $test_url['port']);
-    if($connection){
-      $public_ip = file_get_contents("http://checkip.amazonaws.com");
-    }else{
-      $public_ip = getHostByName(getHostName()); 
-    }
+
+$public_ip = $_SERVER['REMOTE_ADDR']; 
+    
 $user_os        =   getOS(); //get os name
 date_default_timezone_set("Asia/Calcutta");
 $date_time=date("Y-m-d H:i:s");
