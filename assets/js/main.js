@@ -1,32 +1,4 @@
-var countdown = 30 * 60 * 1000;
-var timerId = setInterval(function(){
-  countdown -= 1000;
-  var min = Math.floor(countdown / (60 * 1000));
-  var sec = Math.floor((countdown - (min * 60 * 1000)) / 1000);
 
-  if (min == 0) {
-     clearInterval(timerId);
-      $('#timeout').modal({dismissible: false});
-      if($('#timeout').modal('open')){
-        var modal_countdown = 1 * 60 * 1000;
-        var modal_timerId = setInterval(function(){
-          modal_countdown -= 1000;
-          var modal_min = Math.floor(modal_countdown / (60 * 1000));
-          var modal_sec = Math.floor((modal_countdown - (modal_min * 60 * 1000)) / 1000);
-
-        if (modal_countdown <= 0) {
-           clearInterval(timerId);
-           window.location.replace("logout.php");
-         }else{
-          $("#modal_timer").html(modal_sec);
-        }
-        }, 1000);
-      }
-  } else {
-     $("#timer").html(min + " m " + sec + " s");
-  }
-
-}, 1000);
 $(document).ready(function() {
   $('.button-collapse').sideNav({
       menuWidth: 250

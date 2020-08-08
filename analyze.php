@@ -296,9 +296,9 @@ if(isset($_POST['add_case'])) {
 						</div>
 					</div>
 				</div>
-		<?php } 
+		<?php  
 		echo $pagination;
-		
+		}
 	}
 }else{
 ?>

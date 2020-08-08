@@ -61,7 +61,11 @@ $title = "Insight";
         <td><?php echo $time; ?></td>
         <td><?php echo $date; ?></td>
         <td><?php echo $user_log_infos['url']; ?></td>
-                <td><a class="tooltipped" data-position="top" data-tooltip="<?php echo 'Browser : '.$user_log_infos['Browser'];  echo ' os : '.$user_log_infos['Platform']; ?>"><?php echo $user_log_infos['user_agent']; ?></a>
+                <td><a class="tooltipped" data-position="top" data-tooltip="<?php echo 'Browser : '.$user_log_infos['Browser'];  echo ' os : '.$user_log_infos['Platform']; ?>" style="
+    font-family: lucida-console;
+    font-size: 12px;
+    color: #0b0a0a;
+"><?php echo $user_log_infos['user_agent']; ?></a>
                 </td>
               </tr><?php } ?>
          </tbody>
