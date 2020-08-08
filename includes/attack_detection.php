@@ -45,8 +45,8 @@ function scan_log($table_name, $case_no, $type) {
       }
     }elseif($table_name == "log_sys") {
       if($type == "BRUTE_FORCE") {
-        if(check_matches($scans['message'], $bruteforce)) { 
-          $result[] = $scans['message'];
+        if(check_matches($scans['raw_data'], $bruteforce)) { 
+          $result[] = $scans['raw_data'];
         }
       }
     }

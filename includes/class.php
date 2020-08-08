@@ -15,77 +15,36 @@ class Logread {
 		ini_set('memory_limit', '-1');
 		$file = file($filename);
 		foreach($file as $line) {
-			if(strpos($line, "syslogd") || strpos($line, "saslauthd") || strpos($line, "init") || strpos($line, "last message") || strpos($line, "xinet") || strpos($line, "exiting") || strpos($line, "shutdown[") || strpos($line, "Microsoft") || strpos($line, "named")){
-				continue;
-			}
-			$list = explode(" ", $line);
-			$count = count($list);
-			if($count <= 6) {
-				continue;
-			}
-
+			
+            
 			// Date
-			$date_time = $list[0].' '.$list[1].' '.$list[2];
-			$date_time = date('Y-m-d H:i:s', strtotime($date_time));
-
+			$date_time = preg_match('/\w{3}  ?\d{1,2} \d{1,2}:\d\d:\d\d/', $line, $out) ? $out[0] : '-';
 
 			// IP
-			if(strpos($list[4], 'pure-ftpd') !== false) {
-				$public_ip = explode('@', $list[5]);
-				$public_ip = substr($public_ip[1], 0, -1);
-				$public_ip = $this->check_ip($public_ip);
-			}elseif(strpos($list[4], 'named') !== false) {
-				$public_ip = explode('#', $list[6]);
-				$public_ip = $public_ip[0];
-				$public_ip = $this->check_ip($public_ip);
-			}else{
-				$public_ip = "-";
-			}
-
-			// Protocol
-				$protocol = substr($list[4], 0, -1);
+		    $public_ip = "-";
 			
 
-			// Notification
-			if(strpos($list[4], 'pure-ftpd') !== false) {
-				if(preg_match_all("/\[[^\]]*\]/", $line, $notif)){
-					$remove = array('[', ']');
-					$noti = str_replace($remove, '', $notif[0]);
-					$notification = ucwords(strtolower($noti[0]));
-				}else{
-					$notification = '-';
-				}
-			}elseif(strpos($list[4], 'PAM-hulk') !== false) {
-				$notification = 'Attack';
-			}else{
-				$notification = '-';
-			}
+			// Process name
+			$pname_sys = preg_match('/ ([^ ]+)\[/', $line, $out) ? $out[1] : '-';
+			
 
-			// Message
-			if(strpos($list[4], 'pure-ftpd') !== false) {
-				$message = explode(']', $line); 
-				$message = $message[1];
-				if(strpos($message, '__cpanel') !== false) {
-					$message = explode(' ', $message);
-					$message[1] = "User ";
-					$message = implode(" ", $message);
-				}
-			}elseif(strpos($list[4], 'PAM-hulk') !== false) {
-				$message = explode(']:', $line); 
-				$message = $message[1];
-			}
+			// Process ID
+			$pid_sys = preg_match('/\[(\d+)\]/', $line, $out) ? $out[0] : '-';
+
+			//raw data
+            $raw_data = $line;
 
 			$case_no = $this->case_no;
 
-			$log_sys_sql = "INSERT INTO `log_sys`( `case_no`, `public_ip`, `date_time`, `protocol`, `notification`, `message`) VALUES (:case_no, :public_ip, :date_time, :protocol, :notification, :message)";
+			$log_sys_sql = "INSERT INTO `log_sys`( `case_no`, `public_ip`, `date_time`, `process_name`, `process_id`, `raw_data`) VALUES (:case_no, :public_ip, :date_time, :pname_sys, :pid_sys, :raw_data)";
 			$conn = $this->conn();
 			$log_sys = $conn->prepare($log_sys_sql);
 			$log_sys->bindValue(':case_no', $case_no);
 			$log_sys->bindValue(':public_ip', $public_ip);
 			$log_sys->bindValue(':date_time', $date_time);
-			$log_sys->bindValue(':protocol', $protocol);
-			$log_sys->bindValue(':notification', $notification);
-			$log_sys->bindValue(':message', $message);
+			$log_sys->bindValue(':pname_sys', $pname_sys);
+			$log_sys->bindValue(':pid_sys', $pid_sys);
+			$log_sys->bindValue(':raw_data', $raw_data);
 			$log_sys->execute();
 		}	
 	}

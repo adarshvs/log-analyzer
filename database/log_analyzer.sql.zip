@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 08, 2020 at 06:02 AM
+-- Generation Time: Aug 08, 2020 at 07:28 AM
 -- Server version: 10.4.10-MariaDB
 -- PHP Version: 7.0.33
 
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `case_details` (
   `date` date NOT NULL,
   `registered_date` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -199,11 +199,11 @@ DROP TABLE IF EXISTS `log_sys`;
 CREATE TABLE IF NOT EXISTS `log_sys` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_no` varchar(200) NOT NULL,
-  `public_ip` varchar(15) NOT NULL,
-  `date_time` datetime NOT NULL,
-  `protocol` varchar(100) NOT NULL,
-  `notification` varchar(100) NOT NULL,
-  `message` text NOT NULL,
+  `public_ip` varchar(200) NOT NULL,
+  `date_time` varchar(200) NOT NULL,
+  `process_name` varchar(200) NOT NULL,
+  `process_id` varchar(200) NOT NULL,
+  `raw_data` varchar(1000) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
