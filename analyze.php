@@ -263,25 +263,42 @@ if(isset($_POST['add_case'])) {
 					        echo $pagination; ?>
 			        </div>
 			</div>
-		<?php foreach($data as $log_data) { ?>
+		
 
 				<div class="row">
 					<div class="col s12 m12 l10 offset-l1">
 						<div class="card">
-							<div class="card-content" style="word-wrap: break-word;">
-							<span class="card-title"><?php echo $log_data['id']; ?></span>
-								<p><i class="mdi mdi-earth"></i> <b>Public IP : </b> <?php echo $log_data['public_ip']; ?><a class="btn-floating btn-flat white waves-effect waves-light" href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=<?php echo $_GET['page']; ?>&info=<?php echo encrypt($log_data['public_ip']); ?>"><i class="material-icons grey-text text-darken-3">&#xE8B6;</i></a></p>
-								<p><i class="mdi mdi-clock"></i> <b>Time : </b> <?php echo date("d M Y h:i A", strtotime($log_data['date_time'])); ?></p>
-								<p><i class="mdi mdi-page-layout-header"></i> <b>Protocol : </b><?php echo $log_data['protocol']; ?></p>
-								<p><i class="mdi mdi-bell"></i> <b>Notification : </b><?php echo $log_data['notification']; ?></p>
-								<p><i class="mdi mdi-message-text"></i> <b>Message : </b><?php echo $log_data['message']; ?></p>
-							</div>
+							<div class="card-content">
+							<table class="responsive-table bordered">
+    
+								<thead>
+							    <tr>
+							      <th>#</th>
+							  		<th>IP</th>
+							  		<th>Timestamp</th>
+							  		<th>Protocol</th>
+							  		<th>Notification</th>
+							  		<th>Message</th>
+									</tr>
+							  <tbody><?php foreach($data as $log_data) { ?>
+							      <tr>
+							      <td><?php echo $log_data['id']; ?></td>
+							      <td><?php echo $log_data['public_ip']; ?><a class="btn-floating btn-flat white waves-effect waves-light" href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=<?php echo $_GET['page']; ?>&info=<?php echo encrypt($log_data['public_ip']); ?>"><i class="material-icons grey-text text-darken-3">&#xE8B6;</i></a></td>
+							      <td><?php echo date("d M Y h:i A", strtotime($log_data['date_time'])); ?></td>
+							      <td><?php echo $log_data['protocol']; ?></td>
+							      <td><?php echo $log_data['notification']; ?></td>
+							      <td><?php echo $log_data['message']; ?></td>
+							    </tr><?php } ?>
+							    </tbody>
+								</thead>
+							   </table>
+						</div>
 						</div>
 					</div>
 				</div>
 		<?php } 
 		echo $pagination;
-		}
+		
 	}
 }else{
 ?>
