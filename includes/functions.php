@@ -12,6 +12,15 @@ array_push($mi,$scans['tag']);
 return $mi;
  print_r ($mi);
 }
+function showMessageResponse($res_code)
+{ 
+  $conn = connect_pdo();
+  $messages = $conn->prepare('SELECT message FROM http_response WHERE response=:res_code');
+  $messages->bindParam(':res_code', $res_code);  
+  $messages->execute();
+  $messages = $messages->fetch();
+  return $message = $messages['message'];  
+}
 function deleteDir($dir) {
   if (is_dir($dir)) {
     $objects = scandir($dir);
