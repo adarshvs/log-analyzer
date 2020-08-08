@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 4.9.2
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Aug 04, 2020 at 07:51 PM
--- Server version: 10.4.13-MariaDB
--- PHP Version: 7.4.8
+-- Host: 127.0.0.1:3306
+-- Generation Time: Aug 08, 2020 at 06:02 AM
+-- Server version: 10.4.10-MariaDB
+-- PHP Version: 7.0.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -27,11 +28,13 @@ SET time_zone = "+00:00";
 -- Table structure for table `attack_det`
 --
 
-CREATE TABLE `attack_det` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `attack_det`;
+CREATE TABLE IF NOT EXISTS `attack_det` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `tag` varchar(200) DEFAULT NULL,
-  `tag_category` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `tag_category` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `attack_det`
@@ -46,25 +49,104 @@ INSERT INTO `attack_det` (`id`, `tag`, `tag_category`) VALUES
 -- Table structure for table `case_details`
 --
 
-CREATE TABLE `case_details` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `case_details`;
+CREATE TABLE IF NOT EXISTS `case_details` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `case_no` varchar(200) NOT NULL,
   `ref_no` varchar(200) NOT NULL,
   `site_url` varchar(255) NOT NULL,
   `evidence_file` varchar(255) NOT NULL,
   `date` date NOT NULL,
-  `registered_date` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `registered_date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
 
 --
--- Dumping data for table `case_details`
+-- Table structure for table `http_response`
 --
 
-INSERT INTO `case_details` (`id`, `username`, `case_no`, `ref_no`, `site_url`, `evidence_file`, `date`, `registered_date`) VALUES
-(1, 'admin', '123', '321', 'http://sad', '2145', '2020-08-04', '2020-08-04 10:05:14'),
-(2, 'admin', '7896', '7896', 'http://test.com', '7896', '2020-08-04', '2020-08-04 12:10:20'),
-(3, 'admin', '456', '456', 'http://test', '456', '2020-08-04', '2020-08-04 13:18:30');
+DROP TABLE IF EXISTS `http_response`;
+CREATE TABLE IF NOT EXISTS `http_response` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `response` varchar(200) NOT NULL,
+  `message` varchar(1000) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=69 DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `http_response`
+--
+
+INSERT INTO `http_response` (`id`, `response`, `message`) VALUES
+(1, '100', 'Continue'),
+(2, '101', 'Switching Protocols'),
+(3, '102', 'Processing'),
+(4, '103', 'Early Hints'),
+(5, '200', 'Ok'),
+(6, '201', 'Created'),
+(7, '202', 'Accepted'),
+(8, '203', 'Non-Authoritative Information'),
+(9, '204', 'No Content'),
+(10, '205', 'Reset Content'),
+(11, '206', 'Partial Content'),
+(12, '207', 'Multi-Status'),
+(13, '208', 'Already Reported'),
+(14, '226', 'IM Used'),
+(15, '300', 'Multiple Choices'),
+(16, '301', 'Moved Permanently'),
+(17, '302', 'Found'),
+(18, '303', 'See Other'),
+(19, '304', 'Not Modified'),
+(20, '305', 'Use Proxy'),
+(21, '306', '(Unused)'),
+(22, '307', 'Temporary Redirect'),
+(23, '308', 'Permanent Redirect'),
+(24, '400', 'Bad Request'),
+(25, '401', 'Unauthorized'),
+(26, '402', 'Payment Required'),
+(27, '403', 'Forbidden'),
+(28, '404', 'Not Found'),
+(29, '405', 'Method Not Allowed'),
+(30, '406', 'Not Acceptable'),
+(31, '407', 'Proxy Authentication Required'),
+(32, '408', 'Request Timeout'),
+(33, '409', 'Conflict'),
+(34, '410', 'Gone'),
+(35, '411', 'Length Required'),
+(36, '412', 'Precondition Failed'),
+(37, '413', 'Payload Too Large'),
+(38, '414', 'URI Too Long'),
+(39, '415', 'Unsupported Media Type'),
+(40, '416', 'Range Not Satisfiable'),
+(41, '417', 'Expectation Failed'),
+(42, '421', 'Misdirected Request'),
+(43, '422', 'Unprocessable Entity'),
+(44, '423', 'Locked'),
+(45, '424', 'Failed Dependency'),
+(46, '425', 'Too Early'),
+(47, '426', 'Upgrade Required'),
+(48, '427', 'Unassigned'),
+(49, '428', 'Precondition Required'),
+(50, '429', 'Too Many Requests'),
+(51, '430', 'Unassigned'),
+(52, '431', 'Request Header Fields Too Large'),
+(53, '451', 'Unavailable For Legal Reasons'),
+(54, '500', 'Internal Server Error'),
+(55, '501', 'Not Implemented'),
+(56, '502', 'Bad Gateway'),
+(57, '503', 'Service Unavailable'),
+(58, '504', 'Gateway Timeout'),
+(59, '505', 'HTTP Version Not Supported'),
+(60, '506', 'Variant Also Negotiates'),
+(61, '507', 'Insufficient Storage'),
+(62, '508', 'Loop Detected'),
+(63, '509', 'Unassigned'),
+(64, '510', 'Not Extended'),
+(65, '511', 'Network Authentication Required'),
+(66, '599', 'Unassigned');
 
 -- --------------------------------------------------------
 
@@ -72,12 +154,14 @@ INSERT INTO `case_details` (`id`, `username`, `case_no`, `ref_no`, `site_url`, `
 -- Table structure for table `login_attempts`
 --
 
-CREATE TABLE `login_attempts` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `login_attempts`;
+CREATE TABLE IF NOT EXISTS `login_attempts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `public_ip` varchar(100) NOT NULL,
-  `fail_time` datetime NOT NULL
+  `fail_time` datetime NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -86,11 +170,12 @@ CREATE TABLE `login_attempts` (
 -- Table structure for table `log_access`
 --
 
-CREATE TABLE `log_access` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `log_access`;
+CREATE TABLE IF NOT EXISTS `log_access` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_no` varchar(200) NOT NULL,
   `public_ip` varchar(15) NOT NULL,
-  `date_time` datetime NOT NULL DEFAULT current_timestamp(),
+  `date_time` datetime NOT NULL,
   `timezone` varchar(200) NOT NULL,
   `method` varchar(10) NOT NULL,
   `http_header` varchar(500) NOT NULL,
@@ -100,7 +185,8 @@ CREATE TABLE `log_access` (
   `useragent` text NOT NULL,
   `browser` varchar(200) NOT NULL,
   `country` varchar(200) NOT NULL,
-  `raw_data` varchar(1000) DEFAULT NULL
+  `raw_data` varchar(1000) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -109,14 +195,16 @@ CREATE TABLE `log_access` (
 -- Table structure for table `log_sys`
 --
 
-CREATE TABLE `log_sys` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `log_sys`;
+CREATE TABLE IF NOT EXISTS `log_sys` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_no` varchar(200) NOT NULL,
   `public_ip` varchar(15) NOT NULL,
   `date_time` datetime NOT NULL,
   `protocol` varchar(100) NOT NULL,
   `notification` varchar(100) NOT NULL,
-  `message` text NOT NULL
+  `message` text NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -125,8 +213,9 @@ CREATE TABLE `log_sys` (
 -- Table structure for table `users`
 --
 
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `f_name` varchar(200) NOT NULL,
   `l_name` varchar(200) NOT NULL,
   `email` varchar(255) NOT NULL,
@@ -136,15 +225,16 @@ CREATE TABLE `users` (
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `profile_pic` varchar(200) NOT NULL,
-  `register_time` datetime NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `register_time` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `f_name`, `l_name`, `email`, `gender`, `dob`, `role`, `username`, `password`, `profile_pic`, `register_time`) VALUES
-(1, 'Log', 'Admin', 'admin@admin.com', 'male', '2017-01-01', 'admin', 'admin', '$2y$10$ubsIdDdePlkAcX0yIv7uMOzpe0DExStWwuLpnmqehXIFxsPV.U32i', 'wallpaper_1.png', '2017-07-15 16:58:14');
+(1, 'Log', 'Admin', 'admin@admin.com', 'male', '2017-01-01', 'admin', 'admin', '$2y$10$R/4ph7BetKclCb34ISU5T.ymMBndlcnhxhMpXBuKUgL.7lfXBrpTS', 'wallpaper_1.png', '2017-07-15 16:58:14');
 
 -- --------------------------------------------------------
 
@@ -152,107 +242,17 @@ INSERT INTO `users` (`id`, `f_name`, `l_name`, `email`, `gender`, `dob`, `role`,
 -- Table structure for table `user_activity_logs`
 --
 
-CREATE TABLE `user_activity_logs` (
-  `id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `user_activity_logs`;
+CREATE TABLE IF NOT EXISTS `user_activity_logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `IP` varchar(200) NOT NULL,
   `Browser` varchar(200) NOT NULL,
   `Platform` varchar(200) NOT NULL,
   `date_time` datetime NOT NULL,
   `user_agent` varchar(200) NOT NULL,
-  `url` varchar(200) NOT NULL
+  `url` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `attack_det`
---
-ALTER TABLE `attack_det`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `case_details`
---
-ALTER TABLE `case_details`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `login_attempts`
---
-ALTER TABLE `login_attempts`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `log_access`
---
-ALTER TABLE `log_access`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `log_sys`
---
-ALTER TABLE `log_sys`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `user_activity_logs`
---
-ALTER TABLE `user_activity_logs`
-  ADD PRIMARY KEY (`id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `attack_det`
---
-ALTER TABLE `attack_det`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `case_details`
---
-ALTER TABLE `case_details`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT for table `login_attempts`
---
-ALTER TABLE `login_attempts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `log_access`
---
-ALTER TABLE `log_access`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `log_sys`
---
-ALTER TABLE `log_sys`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `user_activity_logs`
---
-ALTER TABLE `user_activity_logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
