@@ -257,24 +257,7 @@ if(isset($_GET['public_ip'])){
   <div class="col m6 s12" id="sysLogConatiner"  style="padding-left: 0px !important;">
     <h5>Sys log</h5>
     <div style="max-height: 600px; overflow-y: scroll;">
-      <?php foreach ($sys_log_datas as $key => $log_data) { ?>
-      <div class="col s12 m12" style="padding-left: 0px !important;">
-        <div class="card">
-          <div class="card-content" style="word-wrap: break-word;">
-            <span class="card-title"><?php echo $log_data['id']; ?></span>
-            <p>
-              <i class="mdi mdi-earth"></i> <b>Public IP : </b>
-              <a href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&public_ip=<?php echo $log_data['public_ip']; ?>"><?php echo $log_data['public_ip']; ?></a>
-              <a class="btn-floating btn-flat white waves-effect waves-light" href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=&info=<?php echo encrypt($log_data['public_ip']); ?>"><i class="material-icons grey-text text-darken-3">&#xE8B6;</i></a>
-            </p>
-            <p><i class="mdi mdi-clock"></i> <b>Time : </b> <?php echo date("d M Y h:i A", strtotime($log_data['date_time']))?></p>
-            <p><i class="mdi mdi-page-layout-header"></i> <b>Protocol : </b><?php echo $log_data['protocol']; ?></p>
-            <p><i class="mdi mdi-bell"></i> <b>Notification : </b><?php echo $log_data['notification']; ?></p>
-            <p><i class="mdi mdi-message-text"></i> <b>Message : </b><?php echo $log_data['message']; ?></p>
-          </div>
-        </div>
-      </div>
-      <?php } ?>
+       <?php include('sys_show_log.php')?>
     </div>
   </div>
 </div>
@@ -353,24 +336,7 @@ if(isset($_GET['date_time'])){
   <div class="col m6 s12" id="sysLogConatiner"  style="padding-left: 0px !important;">
     <h5>Sys log</h5>
     <div style="max-height: 600px; overflow-y: scroll;">
-      <?php foreach ($sys_log_datas as $key => $log_data) { ?>
-      <div class="col s12 m12" style="padding-left: 0px !important;">
-        <div class="card">
-          <div class="card-content" style="word-wrap: break-word;">
-            <span class="card-title"><?php echo $log_data['id']; ?></span>
-            <p>
-              <i class="mdi mdi-earth"></i> <b>Public IP : </b>
-              <a href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&public_ip=<?php echo $log_data['public_ip']; ?>"><?php echo $log_data['public_ip']; ?></a>
-              <a class="btn-floating btn-flat white waves-effect waves-light" href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=&info=<?php echo encrypt($log_data['public_ip']); ?>"><i class="material-icons grey-text text-darken-3">&#xE8B6;</i></a>
-            </p>
-            <p><i class="mdi mdi-clock"></i> <b>Time : </b> <?php echo date("d M Y h:i A", strtotime($log_data['date_time']))?></p>
-            <p><i class="mdi mdi-page-layout-header"></i> <b>Protocol : </b><?php echo $log_data['protocol']; ?></p>
-            <p><i class="mdi mdi-bell"></i> <b>Notification : </b><?php echo $log_data['notification']; ?></p>
-            <p><i class="mdi mdi-message-text"></i> <b>Message : </b><?php echo $log_data['message']; ?></p>
-          </div>
-        </div>
-      </div>
-      <?php } ?>
+      <?php include('sys_show_log.php')?>
     </div>
   </div>
 </div>
