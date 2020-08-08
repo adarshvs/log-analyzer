@@ -651,7 +651,7 @@ class AccessLogModel {
 	private $page_data=1; 
 	public $data;
 
-	public function pageData($table, $page_data, $show_data, $url_get, $limit,$date) {
+	public function pageData( $table,$page_data, $show_data, $url_get, $limit,$date) {
 
 			$start_date_time = date('Y-m-d H:i:s', strtotime($date.' 00:00:00'));
 			$end_date_time = date('Y-m-d H:i:s', strtotime($date.' 24:00:00'));
@@ -659,7 +659,7 @@ class AccessLogModel {
 			$limit = $limit;
 			$tablename = $table;
 			$page = $page_data;
-			$url_data_decrypt = decrypt($url_get);
+			$url_data = decrypt($url_get);
 			$page = stripslashes($page);
 			$page = htmlspecialchars($page);
 			$page = strip_tags(trim($page));
@@ -675,10 +675,12 @@ class AccessLogModel {
 				$start = 0;
 			$conn = connect_pdo();
 			$log_datas = $conn->prepare("SELECT SQL_CALC_FOUND_ROWS * FROM `{$tablename}` WHERE case_no = :url_data AND `date_time` BETWEEN :start_date_time AND :end_date_time ORDER BY `id` ASC LIMIT {$start}, {$limit}");
-			$log_datas->bindParam(':url_data', $url_data_decrypt);
+			$log_datas->bindParam(':url_data', $url_data);
 			$log_datas->bindParam(':start_date_time', $start_date_time);
 			$log_datas->bindParam(':end_date_time', $end_date_time);
 			$log_datas->execute();
+			
+
 			$results = array();
 			while($log_data = $log_datas->fetch(PDO::FETCH_ASSOC)){
 				$results[] = $log_data;
@@ -700,60 +702,60 @@ class AccessLogModel {
 			$pagination .= '<ul class="pagination">';
 
 			if($page > 1) 
-				$pagination.= '<li><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$prev.'"><i class="material-icons">chevron_left</i></a></li>';
+				$pagination.= '<li><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$prev.'&href=#accessLogTable"><i class="material-icons">chevron_left</i></a></li>';
 			else
 				$pagination.= '<li class="disabled"><a><i class="material-icons">chevron_left</i></a></li>';  
 
 			if($lastpage < 7 + ($adjacents * 2)) { 
 			  for ($counter = 1; $counter <= $lastpage; $counter++) {
 			    if ($counter == $page)
-			      $pagination.= '<li class="active blue"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			      $pagination.= '<li class="active blue"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$counter.'&href=#accessLogTable">'.$counter.'</a></li>';
 			    else
-			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$counter.'&href=#accessLogTable">'.$counter.'</a></li>';
 			  }
 			}
 			elseif($lastpage > 5 + ($adjacents * 2)) {
 			  if($page < 1 + ($adjacents * 2)) {
 				for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++) {
 					if ($counter == $page)
-			      $pagination.= '<li class="active blue"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			      $pagination.= '<li class="active blue"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$counter.'&href=#accessLogTable">'.$counter.'</a></li>';
 			    else
-			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$counter.'&href=#accessLogTable">'.$counter.'</a></li>';
 			    }
 			    $pagination.= "...";
-			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$lpm1.'">'.$lpm1.'</a></li>';
-			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$lastpage.'">'.$lastpage.'</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$lpm1.'&href=#accessLogTable">'.$lpm1.'</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$lastpage.'&href=#accessLogTable">'.$lastpage.'</a></li>';
 			  }
 
 			  elseif($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2)) {
-			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page=1">1</a></li>';
-			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page=2">2</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page=1&href=#accessLogTable">1</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page=2&href=#accessLogTable">2</a></li>';
 			    $pagination.= "...";
 			    for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++) {
 			      if ($counter == $page)
-			      $pagination.= '<li class="active blue"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			      $pagination.= '<li class="active blue"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$counter.'&href=#accessLogTable">'.$counter.'</a></li>';
 			    else
-			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$counter.'&href=#accessLogTable">'.$counter.'</a></li>';
 			    }
 			    $pagination.= "...";
-			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$lpm1.'">'.$lpm1.'</a></li>';
-			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$lastpage.'">'.$lastpage.'</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$lpm1.'&href=#accessLogTable">'.$lpm1.'</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$lastpage.'&href=#accessLogTable">'.$lastpage.'</a></li>';
 			}else{
-			      $pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page=1">1</a></li>';
-				$pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page=2">2</a></li>';
+			      $pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page=1&href=#accessLogTable">1</a></li>';
+				$pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page=2&href=#accessLogTable">2</a></li>';
 				$pagination.= "...";
 			    for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
 				if ($counter == $page)
-					$pagination.= '<li class="active blue"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+					$pagination.= '<li class="active blue"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$counter.'&href=#accessLogTable">'.$counter.'</a></li>';
 				else
-					$pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$counter.'">'.$counter.'</a></li>';
+					$pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&date='.$date.'&page='.$counter.'&href=#accessLogTable">'.$counter.'</a></li>';
 				}
 			}
 		}
 
 			// next button
 			if ($page < $counter - 1) 
-				$pagination.= '<li class="waves-effect"><a href="?show='.$this->show_data.'&data='.$this->url_data.'&page='.$next.'"><i class="material-icons">chevron_right</i></a></li>';
+				$pagination.= '<li class="waves-effect"><a href="?show='.$show_data.'&data='.$url_get.'&page='.$next.'"><i class="material-icons">chevron_right</i></a></li>';
 			else
 				$pagination.= '<li class="disabled"><a><i class="material-icons">chevron_right</i></a></li>';
 

@@ -378,11 +378,12 @@ if(isset($_GET['date_time'])){
 
 <?php  
 if(isset($_GET['date'])){
-  $obj = new Model();
+  
   $case_no = decrypt($_GET['data']);
   try {
     $p_data = new AccessLogModel();
-    $data = $p_data->pageData('log_access', $_GET['page'], $_GET['show'], $_GET['data'], 20, $_GET['date']);
+    $data = $p_data->pageData('log_access', $_GET['page'], 'access_log', $_GET['data'], 20, $_GET['date']);
+   // print_r($data);die();
     $pagination = $p_data->pagination();
   
     include('access_log_table.php');
