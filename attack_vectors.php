@@ -17,9 +17,9 @@ if(!empty($user)&&$user['role'] == 'admin'):
 $title = "Update Database";
 include_once('includes/header.php');
 if(isset($_GET['delete'])){
-  $delete_tag = $_GET['delete'];
-  $delete = $conn->prepare("DELETE FROM attack_det WHERE tag=:tag");
-  $delete->bindValue(':tag', $delete_tag);
+  $id = $_GET['delete'];
+  $delete = $conn->prepare("DELETE FROM attack_det WHERE id=:id");
+  $delete->bindValue(':id', $id);
   $delete->execute();
   
   $rem_id_col = "ALTER TABLE attack_det DROP COLUMN id";
@@ -98,7 +98,7 @@ if(isset($_GET['delete'])){
     <li>
       <div class="collapsible-header"><i class="material-icons">adb</i>MANUAL INJECTION</div>
       <div class="collapsible-body"><span>Make sure that you are adding only manual injection queries here. Incorrect entries will result in false positive outputs .
-	  <a href="https://www.exploit-db.com/papers/13045">Read more about manual SQLi</a> </span></div>
+	  <a target="_blank" href="https://www.exploit-db.com/papers/13045">Read more about manual SQLi</a> </span></div>
     </li>
     <li>
       <div class="collapsible-header"><i class="material-icons">av_timer</i>AUTO INJECTION</div>
@@ -159,7 +159,7 @@ if(isset($_GET['delete'])){
            </div>
           <div class="modal-footer">
             <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
-            <a href="?delete=<?php echo $attack_info['tag']; ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
+            <a href="?delete=<?php echo $attack_info['id']; ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
           </div>
          </div><?php } ?>
         </tbody>
@@ -192,7 +192,7 @@ if(isset($_GET['delete'])){
            </div>
           <div class="modal-footer">
             <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
-            <a href="?delete=<?php echo $attack_info['tag']; ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
+            <a href="?delete=<?php echo htmlentities($attack_info['id'], ENT_HTML5  , 'UTF-8'); ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
           </div>
          </div><?php } ?>
         </tbody>
@@ -225,7 +225,7 @@ if(isset($_GET['delete'])){
            </div>
           <div class="modal-footer">
             <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
-            <a href="?delete=<?php echo $attack_info['tag']; ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
+            <a href="?delete=<?php echo $attack_info['id']; ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
           </div>
          </div><?php } ?>
         </tbody>
@@ -258,7 +258,7 @@ if(isset($_GET['delete'])){
            </div>
           <div class="modal-footer">
             <a class="modal-action modal-close waves-effect btn-flat">Cancel</a>
-            <a href="?delete=<?php echo $attack_info['tag']; ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
+            <a href="?delete=<?php echo $attack_info['id']; ?>" class="modal-action waves-effect btn-flat red-text">YES</a>
           </div>
          </div><?php } ?>
         </tbody>

@@ -11,62 +11,42 @@ class Logread {
 		return connect_pdo();
 	}
 
-	public function processSysLines($lines,$conn){
-		$values_parts = [];
-		foreach($lines as $line) {
-			$values_parts[] =  $this->sysLogParser($line);
-		}
-		$values_part = implode(',', $values_parts) ;
-		$inserted = $this->insertIntoSysLog($values_part,$conn);
-		
-
-		return $inserted;
-	}
-
-	public function insertIntoSysLog($values_part,$conn){
-		$log_access_sql = sprintf("INSERT INTO `log_sys`( `case_no`, `public_ip`, `date_time`, `process_name`, `process_id`, `raw_data`) VALUES %s", $values_part) ;
-			$sql_query_result = $conn->exec($log_access_sql);
-		return $sql_query_result;
-	}
-
-	public function sysLogParser($line){
-		// Date
-		$date_time = preg_match('/\w{3}  ?\d{1,2} \d{1,2}:\d\d:\d\d/', $line, $out) ? $out[0] : '-';
-		// IP
-	    $public_ip = preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $line, $out) ? $out[0] : '-';
-		// Process name
-		$pname_sys = preg_match('/ ([^ ]+)\[/', $line, $out) ? $out[1] : '-';
-		// Process ID
-		$pid_sys = preg_match('/\[(\d+)\]/', $line, $out) ? $out[0] : '-';
-		//raw data
-        $raw_data = $line;
-		$case_no = $this->case_no;
-		$new_values_string = "('$case_no', '$public_ip', '$date_time', '$pname_sys', '$pid_sys', '$raw_data')" ;
-
-		return $new_values_string;
-	}
-
 	function sys($filename) {
 		ini_set('memory_limit', '-1');
-		$conn = $this->conn();
-		$batch_max_lines = 300;
-		$lines = [];
-		$file = new \SplFileObject($filename);
+		$file = file($filename);
+		foreach($file as $line) {
+			
+            
+			// Date
+			$date_time = preg_match('/\w{3}  ?\d{1,2} \d{1,2}:\d\d:\d\d/', $line, $out) ? $out[0] : '-';
 
-		while(!$file->eof()) {
-	 		$lines[] = $file->fgets();
+			// IP
+		    $public_ip = preg_match('/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/', $line, $out) ? $out[0] : '-';
+			
 
-	 		if(count($lines) >= $batch_max_lines){
-				$inserted = $this->processSysLines($lines,$conn);
-				$lines = [];
-	 		}
-	 	}
-	 	$file = null;
-	 	if(count($lines) > 0){
-			$_inserted = $this->processSysLines($lines,$conn);
-			$lines = [];
- 		}
-		
+			// Process name
+			$pname_sys = preg_match('/ ([^ ]+)\[/', $line, $out) ? $out[1] : '-';
+			
+
+			// Process ID
+			$pid_sys = preg_match('/\[(\d+)\]/', $line, $out) ? $out[0] : '-';
+
+			//raw data
+            $raw_data = $line;
+
+			$case_no = $this->case_no;
+
+			$log_sys_sql = "INSERT INTO `log_sys`( `case_no`, `public_ip`, `date_time`, `process_name`, `process_id`, `raw_data`) VALUES (:case_no, :public_ip, :date_time, :pname_sys, :pid_sys, :raw_data)";
+			$conn = $this->conn();
+			$log_sys = $conn->prepare($log_sys_sql);
+			$log_sys->bindValue(':case_no', $case_no);
+			$log_sys->bindValue(':public_ip', $public_ip);
+			$log_sys->bindValue(':date_time', $date_time);
+			$log_sys->bindValue(':pname_sys', $pname_sys);
+			$log_sys->bindValue(':pid_sys', $pid_sys);
+			$log_sys->bindValue(':raw_data', $raw_data);
+			$log_sys->execute();
+		}	
 	}
 
 
@@ -76,9 +56,13 @@ class Logread {
 		$batch_max_lines = 300;
 		$lines = [];
 		$file = new \SplFileObject($filename);
-		//$inserted = true;
-		//$_inserted = true;
+		$inserted = true;
+		$_inserted = true;
+		
+
+		
 		//Multiples of max lines
+   
 		while(!$file->eof()) {
 	 		$lines[] = $file->fgets();
 
@@ -87,6 +71,7 @@ class Logread {
 				$lines = [];
 	 		}
 	 	}
+    // return count($lines);
 	 	//Balance lines
 	 	if(count($lines) > 0){
 			$_inserted = $this->processLines($lines,$conn);
@@ -232,7 +217,65 @@ class CountAndRow {
 	}
 
 }
+class CountAndRowByID {
 
+	function getRows($tablename, $columnname, $case_no, $limit) {
+		$conn = connect_pdo();
+		//$rows = $conn->prepare("SELECT `case_no` FROM `case_details`");
+		//$rows->bindParam(':user', $user);
+		//$rows->execute();
+		//$unions = array();
+		//while ($distinct = $rows->fetch(PDO::FETCH_ASSOC)) {
+			$case_no = decrypt($case_no);
+			$unions[] = "SELECT ".$columnname.", COUNT(".$columnname.") AS county FROM `$tablename` WHERE `case_no`=$case_no GROUP BY ".$columnname;
+		//}
+		$sql = "SELECT DISTINCT ".$columnname.", county FROM (";
+		$command = "";
+		foreach ($unions as $union) {
+			$command .= $union. ' UNION ';
+		}
+		$sql .= rtrim($command, ' UNION ');
+		$sql .= ") t ORDER BY county DESC LIMIT ".$limit;
+		$getvalues = $conn->prepare($sql);
+		$getvalues->execute();
+		$values = array();
+		while ($getvalue = $getvalues->fetch(PDO::FETCH_ASSOC)) {
+			if($getvalue[$columnname] != "-"){
+				$values[] = $getvalue[$columnname];	
+			}
+		}
+		return $values;
+	}
+
+	function getCount($tablename, $columnname, $case_no, $limit) {
+		$conn = connect_pdo();
+		//$rows = $conn->prepare("SELECT `case_no` FROM `case_details` WHERE `username`=:user");
+		//$rows->bindParam(':user', $user);
+		//$rows->execute();
+		//$unions = array();
+		//while ($distinct = $rows->fetch(PDO::FETCH_ASSOC)) {
+			$case_no = decrypt($case_no);
+			$unions[] = "SELECT ".$columnname.", COUNT(".$columnname.") AS county FROM `$tablename` WHERE `case_no`=$case_no GROUP BY ".$columnname;
+		//}
+		$sql = "SELECT DISTINCT ".$columnname.", county FROM (";
+		$command = "";
+		foreach ($unions as $union) {
+			$command .= $union. ' UNION ';
+		}
+		$sql .= rtrim($command, ' UNION ');
+		$sql .= ") t ORDER BY county DESC LIMIT ".$limit;
+		$getcounts = $conn->prepare($sql);
+		$getcounts->execute();
+		$counters = array();
+		while ($getcount = $getcounts->fetch(PDO::FETCH_ASSOC)) {
+			if($getcount[$columnname] != "-"){
+				$counters[] = $getcount['county'];
+			}
+		}
+		return $counters;
+	}
+
+}
 
 
 class Page {

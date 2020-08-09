@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 08, 2020 at 07:37 PM
+-- Generation Time: Aug 09, 2020 at 04:08 PM
 -- Server version: 10.4.10-MariaDB
 -- PHP Version: 7.1.33
 
@@ -34,14 +34,26 @@ CREATE TABLE IF NOT EXISTS `attack_det` (
   `tag` varchar(200) DEFAULT NULL,
   `tag_category` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `attack_det`
 --
 
 INSERT INTO `attack_det` (`id`, `tag`, `tag_category`) VALUES
-(1, '\'', 'mansqli');
+(1, 'order%20by', 'mansqli'),
+(2, 'union%20all%20select', 'mansqli'),
+(3, '\'', 'mansqli'),
+(4, 'or%201%3D1', 'autosqli'),
+(5, 'or%201%3D1--', 'autosqli'),
+(6, '1%20%27or%27%201%20%27%3D%27%201', 'autosqli'),
+(7, '<IMG SRC=# onmouseover=\"alert(\'xxs\')\">', 'xss'),
+(8, '#\"><img src=M onerror=alert(\'XSS\');>', 'xss'),
+(9, 'b374k.php', 'backdoor'),
+(10, 'shell.php', 'backdoor'),
+(11, 'alfa.php', 'backdoor'),
+(12, 'weekly.php', 'backdoor'),
+(13, '<script>alert(‘XSS’)</script>', 'xss');
 
 -- --------------------------------------------------------
 
@@ -60,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `case_details` (
   `date` date NOT NULL,
   `registered_date` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -201,11 +213,11 @@ DROP TABLE IF EXISTS `log_sys`;
 CREATE TABLE IF NOT EXISTS `log_sys` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_no` varchar(200) NOT NULL,
-  `public_ip` varchar(200) NOT NULL,
-  `date_time` varchar(200) NOT NULL,
-  `process_name` varchar(200) NOT NULL,
-  `process_id` varchar(200) NOT NULL,
-  `raw_data` varchar(1000) NOT NULL,
+  `public_ip` varchar(200) DEFAULT NULL,
+  `date_time` varchar(200) DEFAULT NULL,
+  `process_name` varchar(200) DEFAULT NULL,
+  `process_id` varchar(200) DEFAULT NULL,
+  `raw_data` varchar(4000) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

@@ -29,17 +29,17 @@
     var calendarEl = document.getElementById('calendar');
     var allEvents = <?= json_encode($obj->getAllAttacksForCalendar(decrypt($_GET['data'])))?>;
     var calendar = new FullCalendar.Calendar(calendarEl, {
-    	eventStartEditable: false,
+      eventStartEditable: false,
       displayEventTime: false,
-    	height: 450,
+      height: 450,
       buttonText: {
         list: 'Show attack list',
       },
-    	aspectRatio: 1,
-    	themeSystem: 'flatly',
-    	eventColor: 'red',
-    	eventTextColor: 'white',
-      	headerToolbar: {
+      aspectRatio: 1,
+      themeSystem: 'flatly',
+      eventColor: 'red',
+      eventTextColor: 'white',
+        headerToolbar: {
         left: 'prev,next today',
         center: 'title',
         right: 'dayGridMonth,listMonth'
@@ -63,10 +63,16 @@
   <div class="row">
 
     <div class="col s12 m12">
-      <a href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=&print" class="right btn-floating waves-effect waves-light white z-depth-1"><i class="material-icons grey-text text-darken-3">&#xE8AD;</i></a>
+      
       &nbsp;&nbsp;&nbsp;
 
-    <h4 class="light grey-text text-darken-2">Case <?php echo decrypt($_GET['data']); ?></h4>
+    <h4 class="light grey-text text-darken-2">Case <?php echo decrypt($_GET['data']); ?>
+    <a href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=&print" class="right btn-floating waves-effect waves-light white z-depth-1"><i class="material-icons grey-text text-darken-3">file_download</i></a>
+      <a target="_blank" class="waves-effect waves-light btn right" href="log_detail_view.php?show=access_log&data=<?php echo $_GET['data']; ?>"><i class="large material-icons" style="
+    font-size: 12px;
+">arrow_forward</i>Show All</a> &nbsp;&nbsp;&nbsp;
+
+    </h4>
     <?php 
       if (!(isset($_GET['public_ip'])||isset($_GET['date_time']))){ 
         echo '<hr>';
@@ -103,12 +109,56 @@
     ?>
     </div>
   </div>
+  <?php 
+      $graph = new CountAndRowByID;
+      $values = $graph->getRows('log_access', 'public_ip', $_GET['data'], 10);
+      $counts = $graph->getCount('log_access', 'public_ip', $_GET['data'], 10);
+      $browser_name = $graph->getRows('log_access', 'http_response', $_GET['data'], 10);
+      $browser_count = $graph->getCount('log_access', 'http_response', $_GET['data'], 10);
+   //print_r($values);die();
+
+      ?>
+
+<div class="row">
+  <div class="col s12 m6 l6"> 
+          <div class="card">
+            <div class="card-content ersr">
+              <span class="purple-text card-title">Top 10 Public IPs</span>
+              <div class="divider"></div>
+              <?php if(!empty($values)): ?>
+              <canvas id="log_chart" height="300px" />
+              <?php else: ?>
+                <div class="center">
+                  <p>
+                    <h1 class="flow-text">NO DATA</h1>
+                  </p>
+                </div>
+              <?php endif; ?>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s12 m6 l6">
+          <div class="card">
+            <div class="card-content ersr">
+              <span class="purple-text card-title">Top HTTP Responses</span>
+              <div class="divider"></div>
+              <?php if(!empty($browser_name)): ?>
+              <canvas id="crawler_chart" height="300px" />
+              <?php else: ?>
+                <div class="center">
+                  <p>
+                    <h1 class="flow-text">NO DATA</h1>
+                  </p>
+                </div>
+              <?php endif; ?>
+            </div>
+          </div>
+        </div>
+</div>
   <div class="card-panel">
     
-    <h5 class="card-title container-5-right" style="
-    display: inline;
-    float: right;
-"><a target="_blank" class="waves-effect waves-light btn" href="log_detail_view.php?show=access_log&data=<?php echo $_GET['data']; ?>">Show All</a></h5>
+    
     <h5 class="card-title">At a glance</h5><hr>
   
       <div id='calendar' style="margin-top: 20px"></div>
@@ -310,3 +360,76 @@ if(isset($_GET['date'])){
  
 } ?>
 
+ <script type="text/javascript" src="assets/js/chart.min.js?v=2.6.0"></script>
+    <script type="text/javascript"> 
+     var ctx = document.getElementById('log_chart').getContext('2d');
+      var IpsCount = [<?php
+                    $county = "";
+                    foreach($counts as $count) {
+                      $county .= '"'.$count.'",';
+                    }
+                    $county = rtrim($county, ",");
+                    echo $county;
+                ?>
+        ];
+
+      var chart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: [
+            <?php
+              $ips = "";
+              foreach($values as $value) {
+                $ips .= '"'.$value.'",';
+              }
+              $ips = rtrim($ips, ",");
+              echo $ips;
+            ?>],
+            datasets: [{
+                label: "Public IP",
+                data: IpsCount,
+                backgroundColor: ['#ffb74d','#e57373','#ba68c8','#7986cb','#64b5f6','#4dd0e1','#4db6ac','#81c784','#dce775', '#ffd54f'],
+            }]
+          },
+        options: {
+          responsive: true,
+          legend: {
+            display: true
+          }
+        }
+      }); 
+      var ctx = document.getElementById('crawler_chart').getContext('2d');
+      var IpsCount = [<?php
+                    $county = "";
+                    foreach($browser_count as $count) {
+                      $county .= '"'.$count.'",';
+                    }
+                    $county = rtrim($county, ",");
+                    echo $county;
+                ?>];
+
+      var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [
+            <?php
+              $ips = "";
+              foreach($browser_name as $value) {
+                $ips .= '"'.$value.'",';
+              }
+              $ips = rtrim($ips, ",");
+              echo $ips;
+            ?>],
+            datasets: [{
+                label: "Browsers",
+                data: IpsCount,
+                backgroundColor: ['#4db6ac', '#ffb74d','#e57373','#ba68c8','#7986cb','#64b5f6','#4dd0e1','#81c784','#dce775', '#ffd54f'],
+            }]
+          },
+        options: {
+          responsive: true,
+          legend: {
+            display: false
+          }
+        }
+      }); </script>
