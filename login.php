@@ -80,7 +80,7 @@ if(isset($_POST['login'])){
           <div class="col s12 m8 l6 offset-m2 offset-l3">
           <div class="card">
             <div class="card-content grey-text text-darken-3">
-              <span class="card-title">Login<img class="right resposive-img" src="assets/images/logo.png" width="40px"></span>
+              <span class="card-title"><img class="right resposive-img" src="assets/images/logo.png" width="150px"></span>
               <p><br>
                 <div class="row">
                   <form class="col s12" method="POST" action="">

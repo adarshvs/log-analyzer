@@ -1,4 +1,4 @@
-# Apache Log Analyzer
+# SCAVAR
 
 Basic useful feature list:
 

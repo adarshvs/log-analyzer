@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 08, 2020 at 07:28 AM
+-- Generation Time: Aug 08, 2020 at 07:37 PM
 -- Server version: 10.4.10-MariaDB
--- PHP Version: 7.0.33
+-- PHP Version: 7.1.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `case_details` (
   `date` date NOT NULL,
   `registered_date` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
 
@@ -74,7 +74,7 @@ CREATE TABLE IF NOT EXISTS `http_response` (
   `response` varchar(200) NOT NULL,
   `message` varchar(1000) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=69 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=71 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `http_response`
@@ -146,7 +146,9 @@ INSERT INTO `http_response` (`id`, `response`, `message`) VALUES
 (63, '509', 'Unassigned'),
 (64, '510', 'Not Extended'),
 (65, '511', 'Network Authentication Required'),
-(66, '599', 'Unassigned');
+(66, '599', 'Unassigned'),
+(69, '0', 'N/A'),
+(70, '-', 'N/A');
 
 -- --------------------------------------------------------
 
@@ -173,19 +175,19 @@ CREATE TABLE IF NOT EXISTS `login_attempts` (
 DROP TABLE IF EXISTS `log_access`;
 CREATE TABLE IF NOT EXISTS `log_access` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `case_no` varchar(200) NOT NULL,
-  `public_ip` varchar(15) NOT NULL,
-  `date_time` datetime NOT NULL,
-  `timezone` varchar(200) NOT NULL,
-  `method` varchar(10) NOT NULL,
-  `http_header` varchar(500) NOT NULL,
-  `http_response` int(3) NOT NULL,
-  `file_bytes` varchar(200) NOT NULL,
-  `link_ref` text NOT NULL,
-  `useragent` text NOT NULL,
-  `browser` varchar(200) NOT NULL,
-  `country` varchar(200) NOT NULL,
-  `raw_data` varchar(1000) NOT NULL,
+  `case_no` varchar(200) DEFAULT NULL,
+  `public_ip` varchar(15) DEFAULT NULL,
+  `date_time` datetime DEFAULT NULL,
+  `timezone` varchar(200) DEFAULT NULL,
+  `method` varchar(10) DEFAULT NULL,
+  `http_header` varchar(500) DEFAULT NULL,
+  `http_response` int(3) DEFAULT NULL,
+  `file_bytes` varchar(200) DEFAULT NULL,
+  `link_ref` varchar(200) DEFAULT NULL,
+  `useragent` varchar(200) DEFAULT NULL,
+  `browser` varchar(200) DEFAULT NULL,
+  `country` varchar(200) DEFAULT NULL,
+  `raw_data` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
