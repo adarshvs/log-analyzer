@@ -53,15 +53,16 @@ class Logread {
 	public function access($filename) {
 		ini_set('memory_limit', '-1');
 		$conn = $this->conn();
-		$batch_max_lines = 500;
+		$batch_max_lines = 300;
 		$lines = [];
 		$file = new \SplFileObject($filename);
 		$inserted = true;
 		$_inserted = true;
 		
 
-		$conn->beginTransaction();
+		
 		//Multiples of max lines
+   
 		while(!$file->eof()) {
 	 		$lines[] = $file->fgets();
 
@@ -70,17 +71,13 @@ class Logread {
 				$lines = [];
 	 		}
 	 	}
+    // return count($lines);
 	 	//Balance lines
 	 	if(count($lines) > 0){
 			$_inserted = $this->processLines($lines,$conn);
 			$lines = [];
  		}
 
- 		if ($inserted && $_inserted) {
- 			$conn->commit();
- 		}else{
- 			$conn->rollBack();
- 		}
 	
 	}
 	public function processLines($lines,$conn){
@@ -97,7 +94,7 @@ class Logread {
 	
 	public function insertIntoAccessLog($values_part, $conn){
 		$log_access_sql = sprintf("INSERT INTO `log_access`(`case_no`, `public_ip`, `date_time`, `timezone`, `method`, `http_header`, `http_response`, `file_bytes`, `link_ref`, `useragent`, `browser`,`country`,`raw_data`) VALUES %s", $values_part) ;
-			$sql_query_result = $conn->query($log_access_sql);
+			$sql_query_result = $conn->exec($log_access_sql);
 			return $sql_query_result;
 	}
 
@@ -116,7 +113,7 @@ class Logread {
 		preg_match_all('/ (\d{3,8})/', $line, $rdt) ;
 		$http_codes = array('100', '101', '102', '103', '200', '201', '202', '203', '204', '205', '206', '207', '208', '226', '300', '301', '302', '303', '304', '305', '306', '307', '308', '400', '401', '402', '403', '404', '405', '406', '407', '408', '409', '410', '411', '412', '413', '414', '415', '416', '417', '421', '422', '423', '424', '425', '426', '427', '428', '429', '430', '431', '451', '500', '501', '502', '503', '504', '505', '506', '507', '508', '509', '510', '511');
 		$result_byte  = $rdt[1];
-		$http_response = "N/A";
+		$http_response = "0";
 		// File bytes
 		$file_bytes = "0";
 		foreach($result_byte as $res){
