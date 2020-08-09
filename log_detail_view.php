@@ -90,7 +90,7 @@ if(!empty($_GET['show'] && $_GET['data'])) {
                       <td><?php echo $log_data['date_time']; ?></td>
                       <td><?php echo $log_data['process_name']; ?></td>
                       <td><?php echo $log_data['process_id']; ?></td>
-                      <td><?php echo $log_data['raw_data']; ?></td>
+                      <td><?php echo getEncodedName($log_data['raw_data']); ?></td>
                     </tr><?php } ?>
                     </tbody>
                   </thead>

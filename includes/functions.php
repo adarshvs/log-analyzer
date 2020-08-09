@@ -231,5 +231,8 @@ function shuffle_array($list) {
 function getBaseUrl(){
   return 'http://localhost/log-analyzer/';
 }
+function getEncodedName($name){
+  return htmlentities($name, ENT_HTML5  , 'UTF-8');
+}
 
 ?>

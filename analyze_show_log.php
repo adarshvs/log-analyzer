@@ -248,7 +248,7 @@ if(isset($_GET['public_ip'])){
               ?>
             </p><p style="
     color: #978d8d;
-    font-size: 11px;"><?php echo $log_data['raw_data']; ?></p>
+    font-size: 11px;"><?php echo getEncodedName($log_data['raw_data']); ?></p>
           </div>
         </div>
       </div>
@@ -327,7 +327,7 @@ if(isset($_GET['date_time'])){
               ?>
             </p><p style="
     color: #978d8d;
-    font-size: 11px;"><?php echo $log_data['raw_data']; ?></p>
+    font-size: 11px;"><?php echo getEncodedName($log_data['raw_data']); ?></p>
           </div>
         </div>
       </div>

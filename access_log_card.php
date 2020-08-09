@@ -35,7 +35,7 @@
     /* box-shadow: -1px 2px 5px 0px black; */
     /* background-color: white; */
     background-color: #f1f1f1;
-    "><?php echo $log_data['raw_data']; ?></p>
+    "><?php echo getEncodedName($log_data['raw_data']); ?></p>
 
           
         </div>

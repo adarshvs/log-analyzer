@@ -54,7 +54,7 @@
           <td style="
     font-size: 12px;
     font-family: Lucida Console;
-"><?php echo $log_data['raw_data']; ?></td>
+"><?php echo getEncodedName($log_data['raw_data']); ?></td>
         </tr><?php }}?>
       </tbody>
       </table> 
