@@ -67,7 +67,7 @@
       &nbsp;&nbsp;&nbsp;
 
     <h4 class="light grey-text text-darken-2">Case <?php echo decrypt($_GET['data']); ?>
-    <a href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=&print" class="right btn-floating waves-effect waves-light white z-depth-1"><i class="material-icons grey-text text-darken-3">file_download</i></a>
+    <a href="?show=<?php echo $_GET['show']; ?>&data=<?php echo $_GET['data']; ?>&page=&print" class="right  waves-effect waves-light btn" style="margin-left: 10px;"><i class="material-icons white-text text-darken-3">file_download</i></a>
       <a target="_blank" class="waves-effect waves-light btn right" href="log_detail_view.php?show=access_log&data=<?php echo $_GET['data']; ?>"><i class="large material-icons" style="
     font-size: 12px;
 ">arrow_forward</i>Show All</a> &nbsp;&nbsp;&nbsp;
