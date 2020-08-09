@@ -53,25 +53,27 @@ class Logread {
 	public function access($filename) {
 		ini_set('memory_limit', '-1');
 		$conn = $this->conn();
-		$batch_max_lines = 1000;
+		$batch_max_lines = 500;
 		$lines = [];
 		$file = new \SplFileObject($filename);
 		$inserted = true;
+		$_inserted = true;
 		
 
 		$conn->beginTransaction();
 		//Multiples of max lines
 		while(!$file->eof()) {
-	 		$values_parts = [];
 	 		$lines[] = $file->fgets();
 
-	 		if(count($lines) == $batch_max_lines){
+	 		if(count($lines) >= $batch_max_lines){
 				$inserted = $this->processLines($lines,$conn);
+				$lines = [];
 	 		}
 	 	}
 	 	//Balance lines
 	 	if(count($lines) > 0){
 			$_inserted = $this->processLines($lines,$conn);
+			$lines = [];
  		}
 
  		if ($inserted && $_inserted) {
@@ -82,12 +84,13 @@ class Logread {
 	
 	}
 	public function processLines($lines,$conn){
+		$values_parts = [];
 		foreach($lines as $line) {
 			$values_parts[] =  $this->accessLogParser($line);
 		}
 		$values_part = implode(',', $values_parts) ;
 		$inserted = $this->insertIntoAccessLog($values_part,$conn);
-		$lines = [];
+		
 
 		return $inserted;
 	}
